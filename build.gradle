@@ -1,0 +1,122 @@
+buildscript {
+    /**
+     * Plugin repository
+     */
+    repositories { maven { url 'http://repo.qtonecloud.cn/content/groups/public/' } }
+
+    dependencies {
+        classpath 'cn.thinkjoy.gradle.plugins:gradle-gitflow-plugin:1.0.1+'
+        classpath 'org.gradle.api.plugins:gradle-nexus-plugin:0.4'
+        classpath 'org.hibernate.build.gradle:gradle-maven-publish-auth:2.0.1+'
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'gitflow'
+apply plugin: 'maven-publish'
+apply plugin: 'maven-publish-auth'
+apply plugin: 'war'
+/*apply plugin: 'application'*/
+
+sourceCompatibility = projectSourceCompatibility
+version = version
+group = projectGroup
+
+/*mainClassName = "com.thinkjoy.user.StartActiveServer"*/
+
+
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+//sourceSets { api }
+//
+//task apiSourceJar(type: Jar){
+//	baseName = baseName + '-' + sourceSets.api.name
+//	from sourceSets.api.allSource
+//	classifier "sources"
+//}
+//
+//task apiJar(type: Jar) {
+//	baseName = baseName + '-' + sourceSets.api.name
+//	from sourceSets.api.output
+//}
+//
+//jar {
+//	include "**/*.class"
+//	includeEmptyDirs false
+//}
+
+//def webAppDir = file("$webAppDirName")
+//webAppDir.mkdirs()
+//configure(){
+//    apply plugin: 'war'
+//
+task createWebProject() << {
+    def webAppDir = file("$webAppDirName")
+    webAppDir.mkdirs()
+////
+////        file("src/main/resources/config").mkdirs()
+////        file("src/main/resources/config/main-conf.properties").createNewFile()
+////        file("src/main/resources/config/metadata.properties").createNewFile()
+}
+//
+//}
+
+/**
+ * Dependency repository
+ */
+repositories {
+    maven { url 'http://repo.qtonecloud.cn/content/groups/public/' }
+    mavenLocal()
+}
+
+dependencies {
+
+    compile 'org.springframework:spring-context-support:4.0.5.RELEASE'
+    compile 'org.springframework:spring-webmvc:4.0.5.RELEASE'
+    compile 'org.springframework:spring-webmvc-portlet:4.0.5.RELEASE'
+    compile 'org.springframework:spring-web:4.0.5.RELEASE'
+
+    compile 'org.mortbay.jetty:jsp-2.1:6.1.14'
+    compile 'org.mortbay.jetty:jetty:6.1.26'
+    compile 'org.mortbay.jetty:servlet-api:3.0.20100224'
+    compile 'org.springframework:spring-aspects:3.0.6.RELEASE'
+
+    compile 'apache-lang:commons-lang:2.1'
+//    compile('org.slf4j:slf4j-api:1.7.5')
+    compile('org.slf4j:jcl-over-slf4j:1.7.5')
+//    compile('ch.qos.logback:logback-core:1.1.2')
+//    compile('ch.qos.logback:logback-classic:1.1.2')
+    compile('log4j:log4j:1.2.17')
+    compile ('commons-io:commons-io:2.4')
+    compile('com.alibaba:dubbo:2.5.3'){exclude group:'org.springframework', module: 'spring'}
+    compile 'com.google.guava:guava:16.0'
+//    compile 'org.slf4j:com.springsource.slf4j.log4j:1.6.1'
+//    compile 'org.slf4j:com.springsource.slf4j.api:1.6.1'
+    compile 'commons-codec:commons-codec:1.6'
+    compile 'apache-httpclient:commons-httpclient:3.1'
+    testCompile 'org.springframework:spring-test:4.0.5.RELEASE'
+    testCompile 'org.mockito:mockito-core:1.9.5'
+    testCompile 'junit:junit:4.11'
+    compile 'org.springframework.data:spring-data-redis:1.0.6.RELEASE'
+    compile 'com.101tec:zkclient:0.4'
+    compile 'org.fusesource.fabric:fabric-zookeeper:7.2.0.redhat-060'
+    compile 'com.alibaba:fastjson:1.1.41'
+    compile 'org.apache.httpcomponents:httpclient:4.3.6'
+    compile 'org.aspectj:aspectjrt:1.8.8'
+
+    compile 'com.qiniu:sdk:6.1.2'
+    compile 'commons-fileupload:commons-fileupload:1.3.1'
+    compile 'ch.qos.logback:logback-core:1.1.5'
+    compile 'ch.qos.logback:logback-classic:1.1.5'
+    compile 'ch.qos.logback:logback-access:1.1.5'
+    compile 'org.springframework:spring-jdbc:4.2.5.RELEASE'
+    compile files('lib/ojdbc14.jar')
+    compile 'org.mybatis:mybatis-spring:1.2.4'
+    compile  'org.mybatis:mybatis:3.3.1'
+    compile 'org.logback-extensions:logback-ext-spring:0.1.2'
+    compile 'commons-dbcp:commons-dbcp:20030825.184428'
+    compile 'org.apache.poi:poi:3.14'
+    compile 'org.apache.poi:poi-ooxml:3.14'
+}
+

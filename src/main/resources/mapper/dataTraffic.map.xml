@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.thinkjoy.ctd.dao.DataTrafficDao">
+
+    <resultMap id="BaseResultMap" type="cn.thinkjoy.ctd.bean.PresentDataInfo" >
+        <id column="ID" property="id" jdbcType="INTEGER" />
+        <result column="BILL_ID" property="billId" jdbcType="VARCHAR" />
+        <result column="TRADE_DATE" property="tradeDate" jdbcType="VARCHAR" />
+        <result column="TRADE_SERIAL_NO" property="tradeSerialNo" jdbcType="VARCHAR" />
+        <result column="ACCOUNT_DATE" property="accountDate" jdbcType="VARCHAR" />
+        <result column="OFFER_NAME" property="offerName" jdbcType="VARCHAR" />
+        <result column="CLIENT_IP" property="clientIp" jdbcType="VARCHAR" />
+        <result column="MAC_ADDRESS" property="macAddress" jdbcType="VARCHAR" />
+        <result column="PRESENT_STATUS" property="presentStatus" jdbcType="INTEGER" />
+        <result column="RET_CODE" property="retCode" jdbcType="VARCHAR" />
+        <result column="RET_MSG" property="retMsg" jdbcType="VARCHAR" />
+        <result column="BUSI_LOG_ID" property="busiLogId" jdbcType="VARCHAR" />
+        <result column="OSB_SERIAL_NO" property="osbSerialNo" jdbcType="VARCHAR" />
+        <result column="CITY" property="city" jdbcType="VARCHAR" />
+        <result column="DISTRICT" property="district" jdbcType="VARCHAR" />
+        <result column="SCHOOL_ID" property="schoolId" jdbcType="VARCHAR" />
+        <result column="TYPE" property="type" jdbcType="INTEGER" />
+        <result column="OBJECT_ID" property="objectId" jdbcType="VARCHAR" />
+        <result column="PRESENT_USER" property="presentUser" jdbcType="VARCHAR" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        ID, BILL_ID, TRADE_DATE, TRADE_SERIAL_NO, ACCOUNT_DATE, OFFER_NAME, CLIENT_IP, MAC_ADDRESS, PRESENT_STATUS,
+        RET_CODE, RET_MSG, BUSI_LOG_ID, OSB_SERIAL_NO, CITY, DISTRICT, SCHOOL_ID, TYPE, OBJECT_ID, PRESENT_USER, REMARK
+    </sql>
+
+    <select id="findPresentDataTotal" resultType="int">
+        SELECT COUNT(1) FROM zjxxt.DATA_PRESENT_INFO WHERE PRESENT_STATUS = -1
+    </select>
+
+    <select id="findPresentData" resultMap="BaseResultMap">
+        SELECT * FROM (
+          SELECT T.*, ROWNUM RN FROM (
+            SELECT
+            <include refid="Base_Column_List" />
+            FROM zjxxt.DATA_PRESENT_INFO WHERE PRESENT_STATUS = -1
+          ) T  WHERE ROWNUM &lt;=  #{end}
+        ) WHERE RN &gt; #{start}
+    </select>
+
+    <insert id="insertPresentData" parameterType="java.util.List">
+        insert into zjxxt.data_present_info (BILL_ID, OFFER_NAME, CITY, DISTRICT, SCHOOL_ID, TYPE, OBJECT_ID, PRESENT_USER, REMARK)
+        <foreach collection="list" item="item" index="index" separator="union all" >
+            select
+                #{item.billId}, #{item.offerName}, #{item.city},
+                #{item.district}, #{item.schoolId}, #{item.type},
+                #{item.objectId}, #{item.presentUser}, #{item.remark}
+            from dual
+        </foreach>
+    </insert>
+
+    <update id="updatePresentData" >
+
+        <foreach collection="list" item="item" index="index" open="begin" close="; end;" separator=";">
+            update zjxxt.data_present_info
+            <set >
+                <if test="item.tradeDate != null" >
+                    TRADE_DATE=#{item.tradeDate},
+                </if>
+                <if test="item.tradeSerialNo != null" >
+                    TRADE_SERIAL_NO=#{item.tradeSerialNo},
+                </if>
+                <if test="item.accountDate != null" >
+                    ACCOUNT_DATE=#{item.accountDate},
+                </if>
+                PRESENT_STATUS=${item.presentStatus},
+                <if test="item.retCode != null" >
+                    RET_CODE=#{item.retCode},
+                </if>
+                <if test="item.retMsg != null" >
+                    RET_MSG=#{item.retMsg},
+                </if>
+                <if test="item.busiLogId != null" >
+                    BUSI_LOG_ID=#{item.busiLogId},
+                </if>
+                <if test="item.osbSerialNo != null" >
+                    OSB_SERIAL_NO=#{item.osbSerialNo},
+                </if>
+            </set>
+            where ID=${item.id}
+        </foreach>
+    </update>
+    <select id="findBatchPresent" resultMap="BaseResultMap">
+        SELECT * FROM (
+            SELECT T.*, ROWNUM RN FROM (
+                SELECT
+                  <include refid="Base_Column_List" />
+                FROM zjxxt.DATA_PRESENT_INFO
+                WHERE to_date(substr(TRADE_DATE,0,8), 'yyyyMMdd')
+                  between to_date(#{startTime}, 'yyyy-MM-dd')
+                  and to_date(#{endTime}, 'yyyy-MM-dd')
+                  <if test='billId != ""' >
+                    and BILL_ID = #{billId}
+                  </if>
+                  <if test='presentStatus != ""' >
+                    and PRESENT_STATUS = #{presentStatus}
+                  </if>
+            ) T  WHERE ROWNUM &lt;=  #{endRow}
+        ) WHERE RN &gt;= #{startRow}
+    </select>
+
+    <select id="findBatchPresentTotal" resultType="int">
+        SELECT COUNT(1) FROM zjxxt.DATA_PRESENT_INFO
+        WHERE to_date(substr(TRADE_DATE,0,8), 'yyyyMMdd')
+        between to_date(#{startTime}, 'yyyy-MM-dd')
+        and to_date(#{endTime}, 'yyyy-MM-dd')
+        <if test='billId != ""' >
+            and BILL_ID = #{billId}
+        </if>
+        <choose>
+            <when test='presentStatus != ""'>
+                and PRESENT_STATUS = ${presentStatus}
+            </when>
+            <otherwise>
+                and PRESENT_STATUS in (0,1)
+            </otherwise>
+        </choose>
+    </select>
+</mapper>
+

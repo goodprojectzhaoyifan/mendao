@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.thinkjoy.ctd.dao.ICTDCallBackDao">
+
+
+
+    <update id="updateCallInfo" parameterType="java.util.Map">
+
+    update ctd_callinfo set starttime=${date},duration=${duration},state=${state} where sessionid=#{sessionid}
+    </update>
+
+
+
+    <update id="updateCallSubRel" parameterType="java.util.Map">
+       update ctd_subscribeRelation set usesecond=usesecond+${duration}
+        where userid=(select caller from ctd_callinfo where sessionid=#{sessionid})
+         and serviceid='1101'
+    </update>
+
+
+
+</mapper>
+

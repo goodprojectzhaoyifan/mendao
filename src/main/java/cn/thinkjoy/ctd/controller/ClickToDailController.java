@@ -156,7 +156,7 @@ public class ClickToDailController {
             Result result=new Result();
             result.setResultCode("0000");
             result.setResultMessage("点击拨号停止系统内部错误");
-            logger.error("点击拨号停止失败:" + e);
+            logger.error("点击拨号停止失败:123213" + e);
         }
     }
 

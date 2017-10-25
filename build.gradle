@@ -111,12 +111,12 @@ dependencies {
     compile 'ch.qos.logback:logback-classic:1.1.5'
     compile 'ch.qos.logback:logback-access:1.1.5'
     compile 'org.springframework:spring-jdbc:4.2.5.RELEASE'
-    compile files('lib/ojdbc14.jar')
     compile 'org.mybatis:mybatis-spring:1.2.4'
     compile  'org.mybatis:mybatis:3.3.1'
     compile 'org.logback-extensions:logback-ext-spring:0.1.2'
     compile 'commons-dbcp:commons-dbcp:20030825.184428'
     compile 'org.apache.poi:poi:3.14'
     compile 'org.apache.poi:poi-ooxml:3.14'
+    compile 'mysql:mysql-connector-java:5.1.6'
 }
 

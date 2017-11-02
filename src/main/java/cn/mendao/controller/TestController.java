@@ -24,7 +24,7 @@ public class TestController {
         School school = new School();
         school.setSort(1);
         school.setCode("1001");
-        school.setName("清华大学");
+        school.setSchoolName("清华大学");
         return school;
     }
 

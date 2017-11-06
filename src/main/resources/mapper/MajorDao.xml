@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.mendao.dao.MajorDao">
+
+    <select id="getListByParam" resultType="cn.mendao.bean.Major">
+        SELECT type,code,major_name AS majorName,level,msg2015,msg2016,msg2017,plan2017,weici2017,plan2018,major_limit AS majorLimit
+        FROM major
+        <where>
+            <if test="type>=0"> And type = #{type} </if>
+            <if test="code!=null"> And code = #{code} </if>
+            <if test="majorName!=null"> And major_name LIKE #{majorName} </if>
+        </where>
+    </select>
+</mapper>
+

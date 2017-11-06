@@ -15,12 +15,14 @@ public class SchoolResp {
     private long plan2018;
     private int planStatus2018;
     private String manager;
-    private String province;
+    private UtilResp province;
     private String city;
-    private String level;
+    private UtilResp level;
     private long color;
     private String majorPlan;
     private String precedence;
+    private UtilResp property;
+    private String describe;
     private String type;
 
 
@@ -104,11 +106,11 @@ public class SchoolResp {
         this.manager = manager;
     }
 
-    public String getProvince() {
+    public UtilResp getProvince() {
         return province;
     }
 
-    public void setProvince(String province) {
+    public void setProvince(UtilResp province) {
         this.province = province;
     }
 
@@ -120,11 +122,11 @@ public class SchoolResp {
         this.city = city;
     }
 
-    public String getLevel() {
+    public UtilResp getLevel() {
         return level;
     }
 
-    public void setLevel(String level) {
+    public void setLevel(UtilResp level) {
         this.level = level;
     }
 
@@ -150,6 +152,22 @@ public class SchoolResp {
 
     public void setPrecedence(String precedence) {
         this.precedence = precedence;
+    }
+
+    public UtilResp getProperty() {
+        return property;
+    }
+
+    public void setProperty(UtilResp property) {
+        this.property = property;
+    }
+
+    public String getDescribe() {
+        return describe;
+    }
+
+    public void setDescribe(String describe) {
+        this.describe = describe;
     }
 
     public String getType() {

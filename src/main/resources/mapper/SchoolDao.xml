@@ -6,7 +6,7 @@
     <select id="getListByParam" resultType="cn.mendao.bean.School">
         SELECT sort, school_name AS schoolName, code,sort_num AS sortNum, plan2015, toudang2015, minscore2015, lowest2015,
         plan2016,toudang2016, minscore2016, lowest2016, plan2017, toudang2017, minscore2017, lowest2017, plan2018, manager,
-        province, city, level, color, major_plan AS majorPlan, precedence,type
+        province, city, level, color, major_plan AS majorPlan, precedence,type, school_desc AS schoolDesc, property
         FROM school
         WHERE type = #{type}
         <if test="major!=null">

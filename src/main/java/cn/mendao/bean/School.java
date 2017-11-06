@@ -30,6 +30,8 @@ public class School {
     private String majorPlan;
     private String precedence;
     private long type;
+    private String schoolDesc;
+    private String property;
 
 
 
@@ -232,5 +234,21 @@ public class School {
 
     public void setType(long type) {
         this.type = type;
+    }
+
+    public String getSchoolDesc() {
+        return schoolDesc;
+    }
+
+    public void setSchoolDesc(String schoolDesc) {
+        this.schoolDesc = schoolDesc;
+    }
+
+    public String getProperty() {
+        return property;
+    }
+
+    public void setProperty(String property) {
+        this.property = property;
     }
 }

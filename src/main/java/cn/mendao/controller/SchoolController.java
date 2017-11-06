@@ -1,8 +1,12 @@
 package cn.mendao.controller;
 
+import cn.mendao.bean.Major;
 import cn.mendao.bean.School;
 import cn.mendao.resp.BaseRespList;
+import cn.mendao.resp.MajorResp;
 import cn.mendao.resp.SchoolResp;
+import cn.mendao.resp.UtilResp;
+import cn.mendao.service.MajorService;
 import cn.mendao.service.SchoolService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,8 +30,11 @@ public class SchoolController {
     @Autowired
     private SchoolService schoolService;
 
+    @Autowired
+    private MajorService majorService;
+
     @ResponseBody
-    @RequestMapping(value = "/schoolList")
+    @RequestMapping(value = "/getSchool")
     public Object clickView(HttpServletRequest request){
         BaseRespList resp = new BaseRespList();
         try{
@@ -45,13 +52,17 @@ public class SchoolController {
                 schoolResp.setCode(school.getCode());
                 schoolResp.setSchoolName(school.getSchoolName());
                 schoolResp.setSortNum(school.getSortNum());
-                schoolResp.setMsg2015(school.getToudang2015() + " " + school.getMinscore2015() + " " + school.getLowest2015());
-                schoolResp.setMsg2016(school.getToudang2016() + " " + school.getMinscore2016() + " " + school.getLowest2016());
-                schoolResp.setMsg2017(school.getToudang2017() + " " + school.getMinscore2017() + " " + school.getLowest2017());
+                schoolResp.setMsg2015(school.getToudang2015() + "|" + school.getMinscore2015() + "|" + school.getLowest2015());
+                schoolResp.setMsg2016(school.getToudang2016() + "|" + school.getMinscore2016() + "|" + school.getLowest2016());
+                schoolResp.setMsg2017(school.getToudang2017() + "|" + school.getMinscore2017() + "|" + school.getLowest2017());
                 schoolResp.setManager(school.getManager());
-                schoolResp.setProvince(school.getProvince());
+                UtilResp province = new UtilResp();
+                province.setName(school.getProvince());
+                schoolResp.setProvince(province);
                 schoolResp.setCity(school.getCity());
-                schoolResp.setLevel(school.getLevel());
+                UtilResp level = new UtilResp();
+                level.setName(school.getLevel());
+                schoolResp.setLevel(level);
                 schoolResp.setPlan2018(school.getPlan2018());
                 //对比招生计划
                 if(school.getPlan2018()-school.getPlan2017()>0){
@@ -60,6 +71,11 @@ public class SchoolController {
                     schoolResp.setPlanStatus2018(0);
                 }
                 schoolResp.setColor(school.getColor());
+                schoolResp.setDescribe(school.getSchoolDesc());
+                UtilResp property = new UtilResp();
+                property.setName(school.getProperty());
+                schoolResp.setProperty(property);
+
                 if(school.getType() == 1){
                     schoolResp.setType("理工类一本");
                 }else if(school.getType() == 2){
@@ -82,13 +98,59 @@ public class SchoolController {
             resp.setList(respList);
             return resp;
         }catch (Exception e){
+            e.printStackTrace();
             resp.setCode(0);
             resp.setMsg("请求失败");
             return resp;
         }
     }
 
+    @ResponseBody
+    @RequestMapping(value = "/getMajor")
+    public Object getMajor(HttpServletRequest request){
+        BaseRespList resp = new BaseRespList();
+        try{
+            String schoolCode =  request.getParameter("schoolCode");
+            String typeString = request.getParameter("type");
+            String majorName = request.getParameter("majorName");
+            int type = 1;
+            if(typeString != null && !"".equals(typeString)) {
+                type = Integer.valueOf(typeString);
+            }
+            List<Major> list = majorService.getListByParam(type, schoolCode, majorName);
+            List<MajorResp> respList =  new ArrayList<>();
+            for(Major major:list){
+                MajorResp majorResp = new MajorResp();
+                majorResp.setCode(major.getCode());
+                majorResp.setMajorName(major.getMajorName());
+                majorResp.setMsg2015(major.getMsg2015());
+                majorResp.setMsg2016(major.getMsg2016());
+                majorResp.setMsg2017(major.getMsg2017());
+                majorResp.setLevel(major.getLevel());
+                majorResp.setMajorLimit(major.getMajorLimit());
 
+                majorResp.setPlan2018(major.getPlan2018());
+                //对比招生计划
+                if(major.getPlan2018()-major.getPlan2017()>0){
+                    majorResp.setPlanStatus2018(1);
+                }else{
+                    majorResp.setPlanStatus2018(0);
+                }
+
+                respList.add(majorResp);
+            }
+
+            resp.setCode(1);
+            resp.setMsg("请求成功");
+            resp.setList(respList);
+            return resp;
+        }catch (Exception e){
+            e.printStackTrace();
+            resp.setCode(0);
+            resp.setMsg("请求失败");
+            return resp;
+        }
+    }
 
 
 }

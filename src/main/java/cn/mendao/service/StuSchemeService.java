@@ -13,4 +13,6 @@ public interface StuSchemeService {
     void deleteDataByStuNo(String stuNo);
 
     List<StuScheme> getListByStuNo(String stuNo);
+
+    void updateChangeById(long id, int schemeChange);
 }

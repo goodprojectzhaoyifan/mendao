@@ -232,6 +232,36 @@ public class StudentController {
 
     }
 
+    @ResponseBody
+    @RequestMapping(value = "/updateSchemeChange",method = RequestMethod.POST)
+    public Object updateSchemeChange(HttpServletRequest request){
+
+        BaseResp resp = new BaseResp();
+        try{
+            String data = request.getParameter("data");
+            if(data == null){
+                resp.setCode(0);
+                resp.setMsg("参数为空");
+            }
+
+            List<Schemes> schemesList = JSONObject.parseArray(data, Schemes.class);
+
+            if(schemesList != null && schemesList.size()>0){
+                for(Schemes scheme:schemesList){
+                    stuSchemeService.updateChangeById(scheme.getId(),scheme.getSchemeChange());
+                }
+            }
+            resp.setCode(1);
+            resp.setMsg("请求成功");
+            return resp;
+        }catch (Exception e){
+            e.printStackTrace();
+            resp.setCode(0);
+            resp.setMsg("发生异常");
+            return resp;
+        }
+    }
+
     /**
      * 学生编号生成
      * @return

@@ -28,5 +28,9 @@
         SELECT <include refid="stuSchemeColumn"/>
         FROM stu_scheme WHERE stu_no =#{stuNo} ORDER BY scheme_num ASC
     </select>
+
+    <update id="updateChangeById">
+        UPDATE stu_scheme SET scheme_change = #{schemeChange} where id = #{id}
+    </update>
 </mapper>
 

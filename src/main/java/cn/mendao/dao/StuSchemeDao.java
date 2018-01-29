@@ -16,4 +16,6 @@ public interface StuSchemeDao {
     void deleteDataByStuNo(@Param("stuNo") String stuNo);
 
     List<StuScheme> getListByStuNo(@Param("stuNo") String stuNo);
+
+    void updateChangeById(@Param("id") long id,@Param("schemeChange") int schemeChange);
 }

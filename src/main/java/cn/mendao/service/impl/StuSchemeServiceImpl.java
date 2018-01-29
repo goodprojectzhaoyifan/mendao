@@ -31,4 +31,9 @@ public class StuSchemeServiceImpl implements StuSchemeService{
     public List<StuScheme> getListByStuNo(String stuNo) {
         return stuSchemeDao.getListByStuNo(stuNo);
     }
+
+    @Override
+    public void updateChangeById(long id, int schemeChange) {
+        stuSchemeDao.updateChangeById(id,schemeChange);
+    }
 }

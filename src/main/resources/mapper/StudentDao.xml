@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.mendao.dao.StudentDao">
+
+
+    <sql id="stuColumn">
+        id,
+        name,
+        created_user AS createdUser,
+        stu_no AS stuNo,
+        exam_no AS examNo,
+        card_no AS cardNo,
+        major,
+        sex,
+        school,
+        rank,
+        stu_num AS stuNum,
+        stu_type AS stuType,
+        score,
+        precedence,
+        policy,
+        limit_content AS limitContent,
+        other,
+        chinese,
+        english,
+        manth,
+        physics,
+        chemistry,
+        biology,
+        comprehensive
+    </sql>
+
+    <insert id="insertDate">
+        INSERT INTO student(name,created_user,stu_no,exam_no,card_no,major,sex,school,
+        rank,stu_num,stu_type,score,precedence,policy,limit_content,other,chinese,english,manth,
+        physics,chemistry,biology,comprehensive)
+        VALUES (#{student.name},#{student.createdUser},#{student.stuNo},#{student.examNo},#{student.cardNo},#{student.major},#{student.sex},#{student.school},
+            #{student.rank},#{student.stuNum},#{student.stuType},#{student.score},#{student.precedence},#{student.policy},#{student.limitContent},#{student.other},#{student.chinese},#{student.english},#{student.manth},
+            #{student.physics},#{student.chemistry},#{student.biology},#{student.comprehensive}
+        )
+    </insert>
+
+
+    <select id="findOne" resultType="cn.mendao.bean.Student">
+        SELECT <include refid="stuColumn"/>
+        FROM student
+        WHERE id = #{id}
+    </select>
+
+
+    <update id="updateData">
+        UPDATE student
+        SET name=#{student.name},
+        exam_no=#{student.examNo},
+        card_no=#{student.cardNo},
+        major=#{student.major},
+        sex=#{student.sex},
+        school=#{student.school},
+        rank=#{student.rank},
+        stu_num=#{student.stuNum},
+        stu_type=#{student.stuType},
+        score=#{student.score},
+        precedence=#{student.precedence},
+        policy=#{student.policy},
+        limit_content=#{student.limitContent},
+        other=#{student.other},
+        chinese=#{student.chinese},
+        english=#{student.english},
+        manth=#{student.manth},
+        physics=#{student.physics},
+        chemistry=#{student.chemistry},
+        biology=#{student.biology},
+        comprehensive=#{student.comprehensive}
+        WHERE id = #{student.id}
+    </update>
+
+
+    <select id="getList" resultType="cn.mendao.bean.Student">
+        SELECT <include refid="stuColumn"/>
+        FROM student
+        WHERE 1=1
+        <if test="createdUser>0">And created_user = #{createdUser} </if>
+        ORDER BY created_time desc;
+    </select>
+</mapper>
+

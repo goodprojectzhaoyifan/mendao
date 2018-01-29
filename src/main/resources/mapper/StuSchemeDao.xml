@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.mendao.dao.StuSchemeDao">
+
+    <sql id="stuSchemeColumn">
+        id,
+        stu_no AS stuNo,
+        scheme_name AS schemeName,
+        scheme_num AS schemeNum,
+        school_code AS schoolCode,
+        school_name AS schoolName,
+        major_list AS majorList,
+        scheme_change AS schemeChange
+    </sql>
+
+    <insert id="insertData">
+        INSERT INTO stu_scheme(stu_no, scheme_name, scheme_num, school_code, school_name, major_list, scheme_change)
+        VALUES (#{stuScheme.stuNo},#{stuScheme.schemeName},#{stuScheme.schemeNum},#{stuScheme.schoolCode},
+                #{stuScheme.schoolName},#{stuScheme.majorList},#{stuScheme.schemeChange})
+    </insert>
+
+    <delete id="deleteDataByStuNo">
+        DELETE FROM stu_scheme WHERE stu_no =#{stuNo}
+    </delete>
+
+    <select id="getListByStuNo" resultType="cn.mendao.bean.StuScheme">
+        SELECT <include refid="stuSchemeColumn"/>
+        FROM stu_scheme WHERE stu_no =#{stuNo} ORDER BY scheme_num ASC
+    </select>
+</mapper>
+

@@ -76,6 +76,9 @@ dependencies {
     compile 'org.springframework:spring-webmvc:4.0.5.RELEASE'
     compile 'org.springframework:spring-webmvc-portlet:4.0.5.RELEASE'
     compile 'org.springframework:spring-web:4.0.5.RELEASE'
+    compile 'org.springframework.data:spring-data-redis:1.5.0.RELEASE'
+
+
 
     compile 'org.mortbay.jetty:jsp-2.1:6.1.14'
     compile 'org.mortbay.jetty:jetty:6.1.26'
@@ -94,6 +97,7 @@ dependencies {
 //    compile 'org.slf4j:com.springsource.slf4j.log4j:1.6.1'
 //    compile 'org.slf4j:com.springsource.slf4j.api:1.6.1'
     compile 'commons-codec:commons-codec:1.6'
+    compile 'commons-pool:commons-pool:1.5.4'
     compile 'apache-httpclient:commons-httpclient:3.1'
     testCompile 'org.springframework:spring-test:4.0.5.RELEASE'
     testCompile 'org.mockito:mockito-core:1.9.5'
@@ -115,8 +119,7 @@ dependencies {
     compile  'org.mybatis:mybatis:3.3.1'
     compile 'org.logback-extensions:logback-ext-spring:0.1.2'
     compile 'commons-dbcp:commons-dbcp:20030825.184428'
-    compile 'org.apache.poi:poi:3.14'
-    compile 'org.apache.poi:poi-ooxml:3.14'
     compile 'mysql:mysql-connector-java:5.1.6'
+    compile 'redis.clients:jedis:2.6.0'
 }
 

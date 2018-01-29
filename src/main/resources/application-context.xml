@@ -94,4 +94,6 @@
         <property name="maxUploadSize" value="104857600"></property>
     </bean>
 
+
+    <import resource="spring-redis.xml" />
 </beans>

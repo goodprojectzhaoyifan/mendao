@@ -36,4 +36,13 @@ public class StudentServiceImpl implements StudentService{
     public List<Student> getList(Long createdUser) {
         return studentDao.getList(createdUser);
     }
+
+    @Override
+    public Student getByStuNo(String stuNo) {
+        List<Student> list = studentDao.getByStuNo(stuNo);
+        if(list != null && list.size()>0){
+            return list.get(0);
+        }
+        return null;
+    }
 }

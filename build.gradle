@@ -121,5 +121,8 @@ dependencies {
     compile 'commons-dbcp:commons-dbcp:20030825.184428'
     compile 'mysql:mysql-connector-java:5.1.6'
     compile 'redis.clients:jedis:2.6.0'
+    compile 'com.itextpdf:itextpdf:5.5.10'
+    compile 'com.itextpdf:itext-asian:5.2.0'
+
 }
 

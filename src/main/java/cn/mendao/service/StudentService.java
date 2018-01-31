@@ -17,4 +17,6 @@ public interface StudentService {
 
     List<Student> getList(Long createId);
 
+
+    Student getByStuNo(String stuNo);
 }

@@ -15,7 +15,7 @@ public interface StudentService {
 
     void updateData(Student oldStudent);
 
-    List<Student> getList(Long createId);
+    List<Student> getList(Long createId,String stuNo);
 
 
     Student getByStuNo(String stuNo);

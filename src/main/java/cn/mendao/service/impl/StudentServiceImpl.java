@@ -33,8 +33,8 @@ public class StudentServiceImpl implements StudentService{
     }
 
     @Override
-    public List<Student> getList(Long createdUser) {
-        return studentDao.getList(createdUser);
+    public List<Student> getList(Long createdUser,String stuNo) {
+        return studentDao.getList(createdUser, stuNo);
     }
 
     @Override

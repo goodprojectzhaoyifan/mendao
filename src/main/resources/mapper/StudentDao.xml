@@ -81,6 +81,7 @@
         FROM student
         WHERE 1=1
         <if test="createdUser>0">And created_user = #{createdUser} </if>
+        <if test="stuNo != null">And stu_no = #{stuNo} </if>
         ORDER BY created_time desc
     </select>
 

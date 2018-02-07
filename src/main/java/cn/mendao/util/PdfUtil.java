@@ -16,6 +16,7 @@ import java.util.List;
  */
 public class PdfUtil {
 
+
     public static void main(String[] args) throws Exception {
         List<StuSchemeResp> list = new ArrayList<>();
 
@@ -49,11 +50,13 @@ public class PdfUtil {
         student.setScore(1000);
         student.setPrecedence(10);
         String pdfPath = "/Users/warden/Desktop/test4.pdf";
-        createPdf(pdfPath, list, student);
+        String beijingPath = "/Users/warden/Desktop/beijing.png";
+        createPdf(pdfPath, beijingPath, list, student);
 
     }
 
-    public static String createPdf(String pdfPath, List<StuSchemeResp> list, Student student){
+    public static String createPdf(String pdfPath, String beijingPath, List<StuSchemeResp> list, Student student){
+        String returnPath = pdfPath;
         try{
             //创建文件
             Document document = new Document();
@@ -67,11 +70,16 @@ public class PdfUtil {
             //红色字体
             Font redFont = new Font(bfChinese);
             redFont.setColor(BaseColor.RED);
+
+            //黑色字体
+            Font blackFont = new Font(bfChinese);
+            blackFont.setColor(BaseColor.BLACK);
+
             //添加内容
             Paragraph title = new Paragraph("门道中学生生涯规划指导  高考志愿报考方案", redFont);
             title.setAlignment(Element.ALIGN_CENTER);
 
-            Paragraph title1 = new Paragraph("              学生姓名："+student.getName(), redFont);
+            Paragraph title1 = new Paragraph("              学生姓名："+student.getName(), blackFont);
             if(student.getMajor() == 0){
                 title1.add("              科类：理科");
             }else{
@@ -82,7 +90,7 @@ public class PdfUtil {
             title1.setAlignment(Element.ALIGN_CENTER);
 
 
-            float[] widths = {3f,3f,3f,3f,3f,3f};
+            float[] widths = {1f,1f,3f,1f,3f,1f};
             PdfPTable table = new PdfPTable(widths);
             table.setPaddingTop(3f);
             table.setWidthPercentage(100); // 宽度100%填充
@@ -233,13 +241,12 @@ public class PdfUtil {
             //关闭书写器
             writer.close();
 
-            createBeginText("门道教育出版", pdfPath, "/Users/warden/Desktop/test5.pdf");
-            createBeginImage("/Users/warden/Desktop/aaaa.png",pdfPath,"/Users/warden/Desktop/test6.pdf");
+            returnPath = createBeginImage(beijingPath,pdfPath);
         }catch (Exception e){
             e.printStackTrace();
         }
 
-        return pdfPath;
+        return returnPath;
     }
 
     public static String createBeginText(String content,String pdfPath,String exportPath) throws Exception {
@@ -261,20 +268,32 @@ public class PdfUtil {
         return "";
     }
 
-    public static String createBeginImage(String imagePath,String pdfPath,String exportPath) throws Exception {
+    public static String createBeginImage(String imagePath,String pdfPath) throws Exception {
+
+        String exportPath = pdfPath.replace(".pdf","_1.pdf");
 
         //图片水印
         PdfReader reader = new PdfReader(pdfPath);
         PdfStamper stamp = new PdfStamper(reader, new FileOutputStream(exportPath));
 
         Image img = Image.getInstance(imagePath);
-        img.setAbsolutePosition(200, 400);
+        img.setAbsolutePosition(130, 400);
         PdfContentByte under = stamp.getUnderContent(1);
         under.addImage(img);
 
+        Image img1 = Image.getInstance(imagePath);
+        img1.setAbsolutePosition(130, 100);
+        PdfContentByte under1 = stamp.getUnderContent(2);
+        under.addImage(img1);
+
+        Image img2 = Image.getInstance(imagePath);
+        img2.setAbsolutePosition(130, 600);
+        PdfContentByte under2 = stamp.getUnderContent(3);
+        under.addImage(img2);
+
         stamp.close();
         reader.close();
-        return "";
+        return exportPath;
     }
 
     public static Font getPdfChineseFont() throws Exception {

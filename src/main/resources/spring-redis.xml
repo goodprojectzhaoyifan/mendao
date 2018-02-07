@@ -38,6 +38,7 @@
         <!--<property name="usePool" value="${redis.usePool}"></property>-->
 
         <property name="hostName" value="192.168.120.182"></property>
+        <!--<property name="hostName" value="127.0.0.1"></property>-->
         <property name="port" value="6379"></property>
         <property name="timeout" value="15000"></property>
         <property name="usePool" value="true"></property>

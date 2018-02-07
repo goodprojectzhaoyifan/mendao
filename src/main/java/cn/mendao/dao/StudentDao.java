@@ -17,7 +17,7 @@ public interface StudentDao {
 
     void updateData(@Param("student") Student student);
 
-    List<Student> getList(@Param("createdUser") Long createdUser);
+    List<Student> getList(@Param("createdUser") Long createdUser,@Param("stuNo") String stuNo);
 
     List<Student> getByStuNo(@Param("stuNo") String stuNo);
 }

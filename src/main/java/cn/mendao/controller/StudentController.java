@@ -59,13 +59,14 @@ public class StudentController {
         BaseResp resp = new BaseResp();
         try{
             String data = request.getParameter("data");
+            System.out.println("editStudent---->"+data);
             if(data == null){
                 resp.setCode(0);
                 resp.setMsg("参数为空");
             }
 
             Student student = JsonUtil.tranjsonStrToObject(data, Student.class);
-            if(student.getId() > 0){
+            if(student != null && student.getId() > 0){
                 Student oldStudent = studentService.findOne(student.getId());
                 oldStudent.setName(student.getName());
                 oldStudent.setExamNo(student.getExamNo());
@@ -91,6 +92,11 @@ public class StudentController {
 
                 studentService.updateData(oldStudent);
             }else{
+                if(student == null){
+                    resp.setCode(0);
+                    resp.setMsg("参数错误");
+                    return resp;
+                }
                 //保存学生数据
                 student.setStuNo(createStuNo());
                 studentService.insertDate(student);
@@ -115,6 +121,8 @@ public class StudentController {
     @RequestMapping(value = "/getStudent",method = RequestMethod.POST)
     public Object getStudent(HttpServletRequest request){
         String userId = request.getParameter("userId");
+        String stuNo = request.getParameter("stuNo");
+        System.out.println("getStudent---->userId="+userId+"---stuNo="+stuNo);
         BaseRespList resp = new BaseRespList();
         try{
             List<Student> list = new ArrayList<>();
@@ -126,9 +134,9 @@ public class StudentController {
             }else{
                 //如果是管理员获取所有学生
                 if(user.getUserType() == 1){
-                    list = studentService.getList(0l);
+                    list = studentService.getList(0l,stuNo);
                 }else{
-                    list = studentService.getList(Long.valueOf(userId));
+                    list = studentService.getList(Long.valueOf(userId),stuNo);
                 }
             }
 
@@ -175,6 +183,7 @@ public class StudentController {
         BaseResp resp = new BaseResp();
         try{
             String data = request.getParameter("data");
+            System.out.println("saveStuScheme---->"+data);
             if(data == null){
                 resp.setCode(0);
                 resp.setMsg("参数为空");
@@ -219,6 +228,7 @@ public class StudentController {
     @RequestMapping(value = "/getStuScheme",method = RequestMethod.POST)
     public Object getStuScheme(HttpServletRequest request){
         String stuNo = request.getParameter("stuNo");
+        System.out.println("getStuScheme---->"+stuNo);
         BaseRespList resp = new BaseRespList();
         List<StuSchemeResp> respList = new ArrayList<>();
         try{
@@ -267,6 +277,7 @@ public class StudentController {
         BaseResp resp = new BaseResp();
         try{
             String data = request.getParameter("data");
+            System.out.println("getStuScheme---->"+data);
             if(data == null){
                 resp.setCode(0);
                 resp.setMsg("参数为空");
@@ -294,16 +305,18 @@ public class StudentController {
      * 下载学生报考方案的PDF文件
      * @param request
      */
-    @RequestMapping(value = "/uploadPdf")
+    @RequestMapping(value = "/downloadPdf")
     public void uploadPdf(HttpServletRequest request, HttpServletResponse response){
         ServletOutputStream fOut = null;
         try {
             //查询学生的报考方案
             String stuNo = request.getParameter("stuNo");
+            System.out.println("downloadPdf---->"+stuNo);
             if(stuNo == null){
-                response.setContentType("text/html;charset=GBK");//设置响应内容和编码规则
+                response.setContentType("text/html;charset=utf-8");//设置响应内容和编码规则
                 OutputStream out = response.getOutputStream();
                 out.write("输入的stuNo为空".getBytes());
+                return;
             }
             // 获取学生报考方案
             List<StuScheme> list = stuSchemeService.getListByStuNo(stuNo);
@@ -311,9 +324,10 @@ public class StudentController {
             Student student = studentService.getByStuNo(stuNo);
 
             if(list == null || student == null){
-                response.setContentType("text/html;charset=GBK");//设置响应内容和编码规则
+                response.setContentType("text/html;charset=utf-8");//设置响应内容和编码规则
                 OutputStream out = response.getOutputStream();
                 out.write("查询不到报考方案，请先制定报考方案".getBytes());
+                return;
             }
 
             List<StuSchemeResp> respList = new ArrayList<>();
@@ -335,15 +349,16 @@ public class StudentController {
                 }
             }
             String basePath = request.getSession().getServletContext().getRealPath("/");
+            String beijingPath = basePath+"/upfile/beijing.png";
             String path = "";
             if(student.getName() != null){
-                path = "/upfile/"+student.getStuNo()+"_"+student.getName()+".pdf";
+                path = "/upfile/"+student.getName()+".pdf";
             }else{
                 path = "/upfile/"+student.getStuNo()+".pdf";
             }
-            PdfUtil.createPdf(basePath+path, respList, student);
+            String returnPath = PdfUtil.createPdf(basePath+path, beijingPath, respList, student);
 
-            File file = new File(basePath + path);
+            File file = new File(returnPath);
 
             if (file.exists()) {
                 // 取得文件名。
@@ -355,7 +370,9 @@ public class StudentController {
 
                 response.setHeader("Content-disposition","attachment; filename=" + fileName);
                 response.addHeader("Content-Length", "" + file.length());
-                InputStream inStream = new FileInputStream(basePath + path);
+
+
+                InputStream inStream = new FileInputStream(file);
                 response.setContentType("bin");
                 byte[] b = new byte[1024];
                 int len;

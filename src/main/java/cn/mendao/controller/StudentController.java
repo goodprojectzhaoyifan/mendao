@@ -170,6 +170,49 @@ public class StudentController {
         }
 
     }
+    /**
+     * 根据学号获取学生
+     * @param request
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/getStuByStuNo",method = RequestMethod.POST)
+    public Object getStuByStuNo(HttpServletRequest request){
+        String userId = request.getParameter("userId");
+        String stuNo = request.getParameter("stuNo");
+        System.out.println("getStudent---->userId="+userId+"---stuNo="+stuNo);
+        BaseRespData resp = new BaseRespData();
+        try{
+            User user = userService.findOne(Long.valueOf(userId));
+            List<Student> list = new ArrayList<>();
+            if(user == null){
+                resp.setCode(0);
+                resp.setMsg("参数错误");
+                return resp;
+            }else{
+                //如果是管理员获取所有学生
+                if(user.getUserType() == 1){
+                    list = studentService.getList(0l,stuNo);
+                }else{
+                    list = studentService.getList(Long.valueOf(userId),stuNo);
+                }
+            }
+
+
+            if(list != null && list.size()>0){
+                resp.setData(list.get(0));
+            }
+            resp.setCode(1);
+            resp.setMsg("请求成功");
+            return resp;
+        }catch (Exception e){
+            e.printStackTrace();
+            resp.setCode(0);
+            resp.setMsg("发生异常");
+            return resp;
+        }
+
+    }
 
     /**
      * 保存学生报考方案

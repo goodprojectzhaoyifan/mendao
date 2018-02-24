@@ -33,6 +33,33 @@ public class Student {
     private long createdUser;
     private Date createdTime;
 
+    public Student(){
+        if(name == null){
+            name = "";
+        }
+        if(stuNo == null){
+            stuNo = "";
+        }
+        if(examNo == null){
+            examNo = "";
+        }
+        if(cardNo == null){
+            cardNo = "";
+        }
+        if(school == null){
+            school = "";
+        }
+        if(policy == null){
+            policy = "";
+        }
+        if(limitContent == null){
+            limitContent = "";
+        }
+        if(other == null){
+            other = "";
+        }
+
+    }
 
     public long getId() {
         return id;

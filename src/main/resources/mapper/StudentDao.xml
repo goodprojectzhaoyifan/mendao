@@ -28,7 +28,8 @@
         physics,
         chemistry,
         biology,
-        comprehensive
+        comprehensive,
+        created_time AS createdTime
     </sql>
 
     <insert id="insertDate">

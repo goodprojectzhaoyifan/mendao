@@ -7,6 +7,7 @@ public class StuSchemeMajorResp {
 
     private String majorCode;
     private String majorName;
+    private int majorNum;
 
 
     public String getMajorCode() {
@@ -23,5 +24,13 @@ public class StuSchemeMajorResp {
 
     public void setMajorName(String majorName) {
         this.majorName = majorName;
+    }
+
+    public int getMajorNum() {
+        return majorNum;
+    }
+
+    public void setMajorNum(int majorNum) {
+        this.majorNum = majorNum;
     }
 }

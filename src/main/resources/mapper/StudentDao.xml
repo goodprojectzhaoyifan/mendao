@@ -83,14 +83,14 @@
         WHERE 1=1
         <if test="createdUser>0">And created_user = #{createdUser} </if>
         <if test="stuNo != null">And stu_no = #{stuNo} </if>
-        ORDER BY created_time desc
+        ORDER BY id desc
     </select>
 
     <select id="getByStuNo" resultType="cn.mendao.bean.Student">
         SELECT <include refid="stuColumn"/>
         FROM student
         WHERE stu_no = #{stuNo}
-        ORDER BY created_time desc
+        ORDER BY id desc
     </select>
 </mapper>
 

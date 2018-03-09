@@ -27,9 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Scope("prototype")
 @Controller("studentController")
@@ -154,6 +152,10 @@ public class StudentController {
                     studentResp.setPrecedence(student.getPrecedence());
                     if(student.getStuNum()>0 && student.getRank()>0){
                         studentResp.setRanking(student.getRank()+"/"+student.getStuNum());
+                    }
+                    List<StuScheme> stuSchemeList = stuSchemeService.getListByStuNo(student.getStuNo());
+                    if(stuSchemeList != null && stuSchemeList.size()>0){
+                        studentResp.setIsScheme(1);
                     }
                     respList.add(studentResp);
                 }
@@ -289,6 +291,13 @@ public class StudentController {
                     stuSchemeResp.setSchemeChange(stuScheme.getSchemeChange());
                     if(stuScheme.getMajorList() != null && !"".equals(stuScheme.getMajorList())){
                         List<StuSchemeMajorResp> majorRespList = JSONObject.parseArray(stuScheme.getMajorList(), StuSchemeMajorResp.class);
+                        //对专业进行排序
+                        Collections.sort(majorRespList,new Comparator<StuSchemeMajorResp>() {
+                            @Override
+                            public int compare(StuSchemeMajorResp s1, StuSchemeMajorResp s2) {
+                                return s1.getMajorNum()-(s2.getMajorNum());
+                            }
+                        });
                         stuSchemeResp.setMajorList(majorRespList);
                     }
                     respList.add(stuSchemeResp);
@@ -324,12 +333,13 @@ public class StudentController {
             if(data == null){
                 resp.setCode(0);
                 resp.setMsg("参数为空");
+                return resp;
             }
 
             List<Schemes> schemesList = JSONObject.parseArray(data, Schemes.class);
 
-            if(schemesList != null && schemesList.size()>0){
-                for(Schemes scheme:schemesList){
+            if(schemesList != null && schemesList.size() > 0) {
+                for (Schemes scheme:schemesList){
                     stuSchemeService.updateChangeById(scheme.getId(), scheme.getSchemeChange());
                 }
             }
@@ -386,6 +396,13 @@ public class StudentController {
                     stuSchemeResp.setSchemeChange(stuScheme.getSchemeChange());
                     if(stuScheme.getMajorList() != null && !"".equals(stuScheme.getMajorList())){
                         List<StuSchemeMajorResp> majorRespList = JSONObject.parseArray(stuScheme.getMajorList(), StuSchemeMajorResp.class);
+                        //对专业进行排序
+                        Collections.sort(majorRespList,new Comparator<StuSchemeMajorResp>() {
+                            @Override
+                            public int compare(StuSchemeMajorResp s1, StuSchemeMajorResp s2) {
+                                return s1.getMajorNum()-(s2.getMajorNum());
+                            }
+                        });
                         stuSchemeResp.setMajorList(majorRespList);
                     }
                     respList.add(stuSchemeResp);

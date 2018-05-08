@@ -10,7 +10,7 @@
         FROM school
         WHERE type = #{type}
         <if test="major!=null">
-            And code IN (SELECT code FROM major where major_name like #{major})
+            And code IN (SELECT code FROM major where major_name like concat(concat('%',#{major}),'%'))
         </if>
     </select>
 </mapper>

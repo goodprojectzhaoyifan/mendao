@@ -12,4 +12,10 @@ public interface UserService {
     List<User> getUser(String username, String password);
 
     User findOne(Long id);
+
+    List<User> getUserListByParam(String username, String name, int status);
+
+    void insertDate(User user);
+
+    void updateDate(User user);
 }

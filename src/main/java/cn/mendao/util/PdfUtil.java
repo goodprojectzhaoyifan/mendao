@@ -9,6 +9,8 @@ import com.itextpdf.text.pdf.*;
 
 import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -20,13 +22,13 @@ public class PdfUtil {
     public static void main(String[] args) throws Exception {
         List<StuSchemeResp> list = new ArrayList<>();
 
-        for(int i=0;i<6;i++){
+        for(int i=0;i<8;i++){
             StuSchemeResp stuSchemeResp = new StuSchemeResp();
             stuSchemeResp.setId(i);
             stuSchemeResp.setStuNo("12323131");
             stuSchemeResp.setSchemeName("志愿A");
             stuSchemeResp.setSchemeNum(1);
-            stuSchemeResp.setSchoolName("陕西理工大学");
+            stuSchemeResp.setSchoolName("陕西理工大学陕西理工大学陕西理工大学陕西理工大学陕西理工大学");
             stuSchemeResp.setSchoolCode("0011");
             stuSchemeResp.setSchemeChange(1);
             if(i==2){
@@ -51,11 +53,11 @@ public class PdfUtil {
         student.setPrecedence(10);
         String pdfPath = "/Users/warden/Desktop/test4.pdf";
         String beijingPath = "/Users/warden/Desktop/beijing.png";
-        createPdf(pdfPath, beijingPath, list, student);
+        createPdf(pdfPath, beijingPath, list, student, "管理员");
 
     }
 
-    public static String createPdf(String pdfPath, String beijingPath, List<StuSchemeResp> list, Student student){
+    public static String createPdf(String pdfPath, String beijingPath, List<StuSchemeResp> list, Student student, String teacherName){
         String returnPath = pdfPath;
         try{
             //创建文件
@@ -79,20 +81,24 @@ public class PdfUtil {
             Paragraph title = new Paragraph("门道中学生生涯规划指导  高考志愿报考方案", redFont);
             title.setAlignment(Element.ALIGN_CENTER);
 
-            Paragraph title1 = new Paragraph("              学生姓名："+student.getName(), blackFont);
+            Paragraph title1 = new Paragraph("    学生姓名："+student.getName(), blackFont);
             if(student.getMajor() == 0){
-                title1.add("              科类：理科");
+                title1.add("        科类：理科");
             }else{
-                title1.add("              科类：文史");
+                title1.add("        科类：文史");
+            }
+            if(teacherName != null && !teacherName.equals("")){
+                title1.add("        分数："+student.getScore()+"        位次："+student.getPrecedence()+"        指导老师：张三"+teacherName);
+            }else{
+                title1.add("        分数："+student.getScore()+"        位次："+student.getPrecedence()+"        指导老师：无");
             }
 
-            title1.add("              分数："+student.getScore()+"              位次："+student.getPrecedence());
             title1.setAlignment(Element.ALIGN_CENTER);
 
 
-            float[] widths = {1f,1f,3f,1f,3f,1f};
+            float[] widths = {1f,1f,2f,1f,4f,1f};
             PdfPTable table = new PdfPTable(widths);
-            table.setPaddingTop(3f);
+            table.setPaddingTop(2f);
             table.setWidthPercentage(100); // 宽度100%填充
             table.setHorizontalAlignment(Element.ALIGN_LEFT);
 
@@ -127,7 +133,7 @@ public class PdfUtil {
                     firstCell.setPhrase(content);
                     firstCell.setHorizontalAlignment(Element.ALIGN_CENTER);
                     firstCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-                    firstCell.setMinimumHeight(20);//设置表格行高
+                    firstCell.setMinimumHeight(18);//设置表格行高
                     firstCell.setRowspan(1);
                     firstCell.setColspan(2);
                     table.addCell(firstCell);
@@ -136,7 +142,7 @@ public class PdfUtil {
                     firstCell.setPhrase(content);
                     firstCell.setHorizontalAlignment(Element.ALIGN_CENTER);
                     firstCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-                    firstCell.setMinimumHeight(20);//设置表格行高
+                    firstCell.setMinimumHeight(18);//设置表格行高
                     firstCell.setRowspan(1);
                     firstCell.setColspan(2);
                     table.addCell(firstCell);
@@ -145,7 +151,7 @@ public class PdfUtil {
                     firstCell.setPhrase(content);
                     firstCell.setHorizontalAlignment(Element.ALIGN_CENTER);
                     firstCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-                    firstCell.setMinimumHeight(20);//设置表格行高
+                    firstCell.setMinimumHeight(18);//设置表格行高
                     table.addCell(firstCell);
                 }
             }
@@ -160,14 +166,20 @@ public class PdfUtil {
 
                     PdfPCell pdfCell = new PdfPCell();
                     pdfCell.setMinimumHeight(20);//设置表格行高
-                    Paragraph paragraph = new Paragraph(stuScheme.getSchemeName(), getPdfChineseFont());
+                    String SchemeName = "";
+                    if(stuScheme.getSchemeNum() != 7){
+                        SchemeName = "志愿"+stuScheme.getSchemeName();
+                    }else{
+                        SchemeName = "备选";
+                    }
+                    Paragraph paragraph = new Paragraph(SchemeName, getPdfChineseFont());
                     pdfCell.setRowspan(column);
                     pdfCell.setPhrase(paragraph);
                     pdfCell.setUseAscender(true);
                     pdfCell.setVerticalAlignment(pdfCell.ALIGN_MIDDLE);
 
                     PdfPCell pdfCell1 = new PdfPCell();
-                    pdfCell1.setMinimumHeight(20);//设置表格行高
+                    pdfCell1.setMinimumHeight(18);//设置表格行高
                     Paragraph paragraph1 = new Paragraph(stuScheme.getSchoolCode(), getPdfChineseFont());
                     pdfCell1.setRowspan(column);
                     pdfCell1.setPhrase(paragraph1);
@@ -175,7 +187,7 @@ public class PdfUtil {
                     pdfCell1.setVerticalAlignment(pdfCell1.ALIGN_MIDDLE);
 
                     PdfPCell pdfCell2 = new PdfPCell();
-                    pdfCell2.setMinimumHeight(20);//设置表格行高
+                    pdfCell2.setMinimumHeight(18);//设置表格行高
                     Paragraph paragraph2 = new Paragraph(stuScheme.getSchoolName(), getPdfChineseFont());
                     pdfCell2.setRowspan(column);
                     pdfCell2.setPhrase(paragraph2);
@@ -186,25 +198,41 @@ public class PdfUtil {
                     table.addCell(pdfCell1);
                     table.addCell(pdfCell2);
 
-                    if(stuScheme.getMajorList() != null && stuScheme.getMajorList().size()>0){
+                    List<StuSchemeMajorResp> majorRespList = stuScheme.getMajorList();
+                    //对专业进行排序
+                    Collections.sort(majorRespList, new Comparator<StuSchemeMajorResp>() {
+                        @Override
+                        public int compare(StuSchemeMajorResp s1, StuSchemeMajorResp s2) {
+                            return s1.getMajorNum() - (s2.getMajorNum());
+                        }
+                    });
+
+                    if(majorRespList != null && majorRespList.size()>0){
                         for (int i=0;i<column;i++){
                             PdfPCell pdfCell3 = new PdfPCell();
-                            pdfCell3.setMinimumHeight(20);//设置表格行高
-                            Paragraph paragraph3 = new Paragraph(stuScheme.getMajorList().get(i).getMajorCode(), getPdfChineseFont());
-                            pdfCell3.setPhrase(paragraph3);
+                            pdfCell3.setMinimumHeight(18);//设置表格行高
+                            if(stuScheme.getMajorList().get(i).getMajorNum() != 7){
+                                Paragraph paragraph3 = new Paragraph("专业"+stuScheme.getMajorList().get(i).getMajorNum(), getPdfChineseFont());
+                                pdfCell3.setPhrase(paragraph3);
+                            }else{
+                                Paragraph paragraph3 = new Paragraph("备选专业", getPdfChineseFont());
+                                pdfCell3.setPhrase(paragraph3);
+                            }
+
+
 
                             table.addCell(pdfCell3);
 
                             PdfPCell pdfCell4 = new PdfPCell();
-                            pdfCell4.setMinimumHeight(20);//设置表格行高
-                            Paragraph paragraph4 = new Paragraph(stuScheme.getMajorList().get(i).getMajorName(), getPdfChineseFont());
+                            pdfCell4.setMinimumHeight(18);//设置表格行高
+                            Paragraph paragraph4 = new Paragraph(stuScheme.getMajorList().get(i).getMajorCode()+"   "+stuScheme.getMajorList().get(i).getMajorName(), getPdfChineseFont());
                             pdfCell4.setPhrase(paragraph4);
 
                             table.addCell(pdfCell4);
 
                             if(i == 0){
                                 PdfPCell pdfCell5 = new PdfPCell();
-                                pdfCell5.setMinimumHeight(20);//设置表格行高
+                                pdfCell5.setMinimumHeight(18);//设置表格行高
                                 Paragraph paragraph5 = new Paragraph(stuScheme.getSchemeChange()==1?"是":"否", getPdfChineseFont());
                                 pdfCell5.setRowspan(column);
                                 pdfCell5.setPhrase(paragraph5);
@@ -222,7 +250,7 @@ public class PdfUtil {
                         table.addCell(pdfCell4);
 
                         PdfPCell pdfCell5 = new PdfPCell();
-                        pdfCell5.setMinimumHeight(20);//设置表格行高
+                        pdfCell5.setMinimumHeight(18);//设置表格行高
                         Paragraph paragraph5 = new Paragraph(stuScheme.getSchemeChange()==1?"是":"否", getPdfChineseFont());
                         pdfCell5.setRowspan(column);
                         pdfCell5.setPhrase(paragraph5);
@@ -299,7 +327,7 @@ public class PdfUtil {
     public static Font getPdfChineseFont() throws Exception {
         BaseFont bfChinese = BaseFont.createFont("STSongStd-Light", "UniGB-UCS2-H",
                 BaseFont.NOT_EMBEDDED);
-        Font fontChinese = new Font(bfChinese, 8, Font.NORMAL);
+        Font fontChinese = new Font(bfChinese, 9, Font.NORMAL);
         return fontChinese;
     }
 

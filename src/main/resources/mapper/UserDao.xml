@@ -4,15 +4,44 @@
 <mapper namespace="cn.mendao.dao.UserDao">
 
     <select id="getUser" resultType="cn.mendao.bean.User">
-        SELECT id,username,password,user_type AS userType,created_time AS createdTime
+        SELECT id,username,name,phone,password,user_type AS userType,status,area,created_time AS createdTime
         FROM user
         WHERE username = #{username} and password = #{password}
     </select>
 
     <select id="findOne" resultType="cn.mendao.bean.User">
-        SELECT id,username,password,user_type AS userType,created_time AS createdTime
+        SELECT id,username,name,phone,password,user_type AS userType,status,area,created_time AS createdTime
         FROM user
         WHERE id=#{id}
     </select>
+
+    <select id="getUserListByParam" resultType="cn.mendao.bean.User">
+        SELECT id,username,name,phone,password,user_type AS userType,status,area,created_time AS createdTime
+        FROM user
+        WHERE
+        status = #{status}
+        <if test="username!=null and username!=''">
+            AND username LIKE concat(concat('%',#{username}),'%')
+        </if>
+        <if test="name!=null and name!=''">
+            AND name LIKE concat(concat('%',#{name}),'%')
+        </if>
+    </select>
+
+    <insert id="insertDate">
+        INSERT INTO user(username,name,phone,password,user_type,area)
+        VALUES (#{user.username},#{user.name},#{user.phone},#{user.password},#{user.userType},#{user.area})
+    </insert>
+
+    <update id="updateDate">
+        UPDATE user
+        set username=#{user.username},
+            name=#{user.name},
+            phone=#{user.phone},
+            password=#{user.password},
+            status=#{user.status},
+            area=#{user.area}
+        WHERE id = #{user.id}
+    </update>
 </mapper>
 

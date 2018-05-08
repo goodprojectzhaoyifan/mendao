@@ -375,6 +375,8 @@ public class StudentController {
             List<StuScheme> list = stuSchemeService.getListByStuNo(stuNo);
             //获取学生
             Student student = studentService.getByStuNo(stuNo);
+            //获取指导教师
+            User createdUser = userService.findOne(student.getCreatedUser());
 
             if(list == null || student == null){
                 response.setContentType("text/html;charset=utf-8");//设置响应内容和编码规则
@@ -416,7 +418,7 @@ public class StudentController {
             }else{
                 path = "/upfile/"+student.getStuNo()+".pdf";
             }
-            String returnPath = PdfUtil.createPdf(basePath+path, beijingPath, respList, student);
+            String returnPath = PdfUtil.createPdf(basePath+path, beijingPath, respList, student, createdUser.getName());
 
             File file = new File(returnPath);
 

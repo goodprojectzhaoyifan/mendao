@@ -26,4 +26,20 @@ public class UserServiceImpl implements UserService{
     public User findOne(Long id) {
         return userDao.findOne(id);
     }
+
+    @Override
+    public List<User> getUserListByParam(String username, String name, int status) {
+        return userDao.getUserListByParam(username, name, status);
+    }
+
+    @Override
+    public void insertDate(User user) {
+        userDao.insertDate(user);
+    }
+
+    @Override
+    public void updateDate(User user) {
+        userDao.updateDate(user);
+    }
+
 }

@@ -4,6 +4,7 @@ import cn.mendao.bean.User;
 import cn.mendao.resp.BaseResp;
 import cn.mendao.resp.BaseRespList;
 import cn.mendao.resp.UserResp;
+import cn.mendao.service.StudentService;
 import cn.mendao.service.UserService;
 import cn.mendao.util.JsonUtil;
 import org.slf4j.Logger;
@@ -29,22 +30,44 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private StudentService studentService;
+
     @ResponseBody
     @RequestMapping(value = "/getUserList",method = RequestMethod.POST)
     public Object getUserList(HttpServletRequest request){
         BaseRespList resp = new BaseRespList();
+        String id = request.getParameter("id");
+        List<UserResp> respList = new ArrayList<>();
         try{
-            List<User> list = userService.getUserListByParam(null, null, 0);
-            List<UserResp> respList = new ArrayList<>();
-            for(User user:list){
+            if(id != null && !id.equals("")){
+                User user = userService.findOne(Long.valueOf(id));
                 UserResp userResp = new UserResp();
                 userResp.setId(user.getId());
                 userResp.setUsername(user.getUsername());
+                userResp.setPhone(user.getPhone());
                 userResp.setName(user.getName());
                 userResp.setPassword(user.getPassword());
                 userResp.setUserType(user.getUserType());
                 userResp.setCreatedTime(user.getCreatedTime());
+                userResp.setArea(user.getArea());
+                userResp.setSchemeCount(studentService.getList(user.getId(), null).size());
                 respList.add(userResp);
+            }else{
+                List<User> list = userService.getUserListByParam(null, null, 0);
+                for(User user:list){
+                    UserResp userResp = new UserResp();
+                    userResp.setId(user.getId());
+                    userResp.setUsername(user.getUsername());
+                    userResp.setPhone(user.getPhone());
+                    userResp.setName(user.getName());
+                    userResp.setPassword(user.getPassword());
+                    userResp.setUserType(user.getUserType());
+                    userResp.setCreatedTime(user.getCreatedTime());
+                    userResp.setArea(user.getArea());
+                    userResp.setSchemeCount(studentService.getList(user.getId(), null).size());
+                    respList.add(userResp);
+                }
             }
             resp.setList(respList);
             resp.setCode(1);

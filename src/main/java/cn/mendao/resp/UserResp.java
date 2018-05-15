@@ -15,6 +15,7 @@ public class UserResp {
     private int userType;
     private int status;
     private String area;
+    private int schemeCount;
     private Date createdTime;
 
     public long getId() {
@@ -79,6 +80,14 @@ public class UserResp {
 
     public void setArea(String area) {
         this.area = area;
+    }
+
+    public int getSchemeCount() {
+        return schemeCount;
+    }
+
+    public void setSchemeCount(int schemeCount) {
+        this.schemeCount = schemeCount;
     }
 
     public Date getCreatedTime() {

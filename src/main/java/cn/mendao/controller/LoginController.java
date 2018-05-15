@@ -39,6 +39,12 @@ public class LoginController {
             }
             List<User> list = userService.getUser(username,password);
             if(list != null && list.size()>0){
+                if (list.get(0).getStatus() == 1){
+                    resp.setCode(0);
+                    resp.setMsg("你的用户已经被禁用，请联系管理员");
+                    resp.setData(list.get(0));
+                    return resp;
+                }
                 resp.setCode(1);
                 resp.setMsg("登录成功");
                 resp.setData(list.get(0));

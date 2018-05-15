@@ -88,7 +88,7 @@ public class PdfUtil {
                 title1.add("        科类：文史");
             }
             if(teacherName != null && !teacherName.equals("")){
-                title1.add("        分数："+student.getScore()+"        位次："+student.getPrecedence()+"        指导老师：张三"+teacherName);
+                title1.add("        分数："+student.getScore()+"        位次："+student.getPrecedence()+"        指导老师："+teacherName);
             }else{
                 title1.add("        分数："+student.getScore()+"        位次："+student.getPrecedence()+"        指导老师：无");
             }

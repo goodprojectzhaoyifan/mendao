@@ -11,13 +11,14 @@
         school_code AS schoolCode,
         school_name AS schoolName,
         major_list AS majorList,
-        scheme_change AS schemeChange
+        scheme_change AS schemeChange,
+        scheme_type AS schemeType,
     </sql>
 
     <insert id="insertData">
-        INSERT INTO stu_scheme(stu_no, scheme_name, scheme_num, school_code, school_name, major_list, scheme_change)
+        INSERT INTO stu_scheme(stu_no, scheme_name, scheme_num, school_code, school_name, major_list, scheme_change, scheme_type)
         VALUES (#{stuScheme.stuNo},#{stuScheme.schemeName},#{stuScheme.schemeNum},#{stuScheme.schoolCode},
-                #{stuScheme.schoolName},#{stuScheme.majorList},#{stuScheme.schemeChange})
+                #{stuScheme.schoolName},#{stuScheme.majorList},#{stuScheme.schemeChange},#{stuScheme.schemeType})
     </insert>
 
     <delete id="deleteDataByStuNo">

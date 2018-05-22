@@ -126,6 +126,7 @@ public class SchoolController {
                 majorResp.setMsg2017(major.getMsg2017());
                 majorResp.setLevel(major.getLevel());
                 majorResp.setMajorLimit(major.getMajorLimit());
+                majorResp.setMajorDesc(major.getMajorDesc());
 
                 majorResp.setPlan2018(major.getPlan2018());
                 //对比招生计划
@@ -223,6 +224,7 @@ public class SchoolController {
                     majorResp.setMsg2017(major.getMsg2017());
                     majorResp.setLevel(major.getLevel());
                     majorResp.setMajorLimit(major.getMajorLimit());
+                    majorResp.setMajorDesc(major.getMajorDesc());
 
                     majorResp.setPlan2018(major.getPlan2018());
                     //对比招生计划

@@ -16,6 +16,7 @@ public class Major {
     private long weici2017;
     private long plan2018;
     private String majorLimit;
+    private String majorDesc;
 
 
     public long getType() {
@@ -104,5 +105,13 @@ public class Major {
 
     public void setMajorLimit(String majorLimit) {
         this.majorLimit = majorLimit;
+    }
+
+    public String getMajorDesc() {
+        return majorDesc;
+    }
+
+    public void setMajorDesc(String majorDesc) {
+        this.majorDesc = majorDesc;
     }
 }

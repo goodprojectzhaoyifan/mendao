@@ -14,6 +14,7 @@ public class MajorResp {
     private int planStatus2018;
     private String level;
     private String majorLimit;
+    private String majorDesc;
 
 
     public String getCode() {
@@ -86,5 +87,13 @@ public class MajorResp {
 
     public void setMajorLimit(String majorLimit) {
         this.majorLimit = majorLimit;
+    }
+
+    public String getMajorDesc() {
+        return majorDesc;
+    }
+
+    public void setMajorDesc(String majorDesc) {
+        this.majorDesc = majorDesc;
     }
 }

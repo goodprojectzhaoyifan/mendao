@@ -248,6 +248,7 @@ public class StudentController {
                     stuScheme.setSchoolCode(scheme.getSchoolCode());
                     stuScheme.setMajorList(scheme.getMajorList());
                     stuScheme.setSchemeChange(scheme.getSchemeChange());
+                    stuScheme.setSchemeType(scheme.getSchemeType());
 
                     stuSchemeService.insertData(stuScheme);
                 }
@@ -289,6 +290,8 @@ public class StudentController {
                     stuSchemeResp.setSchoolName(stuScheme.getSchoolName());
                     stuSchemeResp.setSchoolCode(stuScheme.getSchoolCode());
                     stuSchemeResp.setSchemeChange(stuScheme.getSchemeChange());
+                    stuSchemeResp.setSchemeType(stuScheme.getSchemeType());
+
                     if(stuScheme.getMajorList() != null && !"".equals(stuScheme.getMajorList())){
                         List<StuSchemeMajorResp> majorRespList = JSONObject.parseArray(stuScheme.getMajorList(), StuSchemeMajorResp.class);
                         //对专业进行排序

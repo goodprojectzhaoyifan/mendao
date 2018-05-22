@@ -12,6 +12,7 @@ public class Schemes {
     private String schoolName;
     private String majorList;
     private int schemeChange;//是否服从调剂0:是1:否
+    private int schemeType;
 
 
     public long getId() {
@@ -68,5 +69,13 @@ public class Schemes {
 
     public void setSchemeChange(int schemeChange) {
         this.schemeChange = schemeChange;
+    }
+
+    public int getSchemeType() {
+        return schemeType;
+    }
+
+    public void setSchemeType(int schemeType) {
+        this.schemeType = schemeType;
     }
 }

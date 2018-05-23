@@ -49,9 +49,9 @@ public class SchoolController {
                 schoolResp.setCode(school.getCode());
                 schoolResp.setSchoolName(school.getSchoolName());
                 schoolResp.setSortNum(school.getSortNum());
-                schoolResp.setMsg2015(school.getToudang2015() + "|" + school.getMinscore2015() + "|" + school.getLowest2015());
-                schoolResp.setMsg2016(school.getToudang2016() + "|" + school.getMinscore2016() + "|" + school.getLowest2016());
-                schoolResp.setMsg2017(school.getToudang2017() + "|" + school.getMinscore2017() + "|" + school.getLowest2017());
+                schoolResp.setMsg2015(school.getToudang2015() + "|" + school.getMinscore2015() + "|<strong>" + school.getLowest2015()+"</strong>");
+                schoolResp.setMsg2016(school.getToudang2016() + "|" + school.getMinscore2016() + "|<strong>" + school.getLowest2016()+"</strong>");
+                schoolResp.setMsg2017(school.getToudang2017() + "|" + school.getMinscore2017() + "|<strong>" + school.getLowest2017()+"</strong>");
                 schoolResp.setManager(school.getManager());
                 UtilResp province = new UtilResp();
                 province.setName(school.getProvince());
@@ -171,9 +171,9 @@ public class SchoolController {
                 schoolResp.setCode(school.getCode());
                 schoolResp.setSchoolName(school.getSchoolName());
                 schoolResp.setSortNum(school.getSortNum());
-                schoolResp.setMsg2015(school.getToudang2015() + "|" + school.getMinscore2015() + "|" + school.getLowest2015());
-                schoolResp.setMsg2016(school.getToudang2016() + "|" + school.getMinscore2016() + "|" + school.getLowest2016());
-                schoolResp.setMsg2017(school.getToudang2017() + "|" + school.getMinscore2017() + "|" + school.getLowest2017());
+                schoolResp.setMsg2015(school.getToudang2015() + "|" + school.getMinscore2015() + "|<strong>" + school.getLowest2015()+"</strong>");
+                schoolResp.setMsg2016(school.getToudang2016() + "|" + school.getMinscore2016() + "|<strong>" + school.getLowest2016()+"</strong>");
+                schoolResp.setMsg2017(school.getToudang2017() + "|" + school.getMinscore2017() + "|<strong>" + school.getLowest2017()+"</strong>");
                 schoolResp.setManager(school.getManager());
                 UtilResp province = new UtilResp();
                 province.setName(school.getProvince());

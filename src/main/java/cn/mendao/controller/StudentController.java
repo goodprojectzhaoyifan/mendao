@@ -477,11 +477,23 @@ public class StudentController {
         Object num = redisUtil.get(key);
         if(num == null){
             no.append("0001");
-            redisUtil.set(key,2,7200l);
+            redisUtil.set(key,2,getRemainSecondsOneDay(new Date()));
         }else{
             no.append(String.format("%04d", (int) num));
-            redisUtil.set(key,(int)num + 1,7200l);
+            redisUtil.set(key,(int)num + 1,getRemainSecondsOneDay(new Date()));
         }
         return no.toString();
+    }
+
+    public Long getRemainSecondsOneDay(Date currentDate) {
+        Calendar midnight=Calendar.getInstance();
+        midnight.setTime(currentDate);
+        midnight.add(midnight.DAY_OF_MONTH,1);
+        midnight.set(midnight.HOUR_OF_DAY,0);
+        midnight.set(midnight.MINUTE,0);
+        midnight.set(midnight.SECOND,0);
+        midnight.set(midnight.MILLISECOND,0);
+        Long seconds=(long)((midnight.getTime().getTime()-currentDate.getTime())/1000);
+        return seconds;
     }
 }

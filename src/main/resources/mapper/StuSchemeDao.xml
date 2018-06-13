@@ -12,7 +12,7 @@
         school_name AS schoolName,
         major_list AS majorList,
         scheme_change AS schemeChange,
-        scheme_type AS schemeType,
+        scheme_type AS schemeType
     </sql>
 
     <insert id="insertData">

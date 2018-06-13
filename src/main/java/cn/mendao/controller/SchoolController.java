@@ -5,6 +5,8 @@ import cn.mendao.bean.School;
 import cn.mendao.resp.*;
 import cn.mendao.service.MajorService;
 import cn.mendao.service.SchoolService;
+import cn.mendao.util.RedisUtil;
+import com.alibaba.fastjson.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Scope("prototype")
 @Controller("schoolController")
@@ -121,6 +125,33 @@ public class SchoolController {
                 MajorResp majorResp = new MajorResp();
                 majorResp.setCode(major.getCode());
                 majorResp.setMajorName(major.getMajorName());
+
+                String replaceString = "";
+                Pattern p = Pattern.compile("\\[(.*?)\\]");
+                Matcher m2015 = p.matcher(major.getMsg2015());
+                while(m2015.find()) {
+                    replaceString = m2015.group(1);
+                }
+                if(!replaceString.equals("")){
+                    major.setMsg2015(major.getMsg2015().replace("[" + replaceString + "]", "[<strong>"+replaceString+"</strong>]"));
+                }
+
+                Matcher m2016 = p.matcher(major.getMsg2016());
+                while(m2016.find()) {
+                    replaceString = m2016.group(1);
+                }
+                if(!replaceString.equals("")){
+                    major.setMsg2016(major.getMsg2016().replace("[" + replaceString + "]", "[<strong>" + replaceString+ "</strong>]"));
+                }
+
+                Matcher m2017 = p.matcher(major.getMsg2017());
+                while(m2017.find()) {
+                    replaceString = m2017.group(1);
+                }
+                if(!replaceString.equals("")){
+                    major.setMsg2017(major.getMsg2017().replace("[" + replaceString + "]", "[<strong>" + replaceString+ "</strong>]"));
+                }
+
                 majorResp.setMsg2015(major.getMsg2015());
                 majorResp.setMsg2016(major.getMsg2016());
                 majorResp.setMsg2017(major.getMsg2017());
@@ -162,6 +193,15 @@ public class SchoolController {
             int type = 1;
             if(typeString != null && !"".equals(typeString)){
                 type = Integer.valueOf(typeString);
+            }
+            RedisUtil redisUtil = new RedisUtil();
+            Object redisObject = redisUtil.get("schoolV2_" + typeString);
+            if(redisObject != null){
+                resp.setCode(1);
+                resp.setMsg("请求成功");
+                List<SchoolRespV2> redisList = JSONArray.parseArray((String) redisObject, SchoolRespV2.class);
+                resp.setList(redisList);
+                return resp;
             }
             List<School> list = schoolService.getListByParam(type, majorString);
             List<SchoolRespV2> respList = new ArrayList<>();
@@ -219,6 +259,33 @@ public class SchoolController {
                     MajorResp majorResp = new MajorResp();
                     majorResp.setCode(major.getCode());
                     majorResp.setMajorName(major.getMajorName());
+
+                    String replaceString = "";
+                    Pattern p = Pattern.compile("\\[(.*?)\\]");
+                    Matcher m2015 = p.matcher(major.getMsg2015());
+                    while(m2015.find()) {
+                        replaceString = m2015.group(1);
+                    }
+                    if(!replaceString.equals("")){
+                        major.setMsg2015(major.getMsg2015().replace("[" + replaceString + "]", "[<strong>" + replaceString + "</strong>]"));
+                    }
+
+                    Matcher m2016 = p.matcher(major.getMsg2016());
+                    while(m2016.find()) {
+                        replaceString = m2016.group(1);
+                    }
+                    if(!replaceString.equals("")){
+                        major.setMsg2016(major.getMsg2016().replace("[" + replaceString + "]", "[<strong>" + replaceString + "</strong>]"));
+                    }
+
+                    Matcher m2017 = p.matcher(major.getMsg2017());
+                    while(m2017.find()) {
+                        replaceString = m2017.group(1);
+                    }
+                    if(!replaceString.equals("")){
+                        major.setMsg2017(major.getMsg2017().replace("[" + replaceString + "]", "[<strong>" + replaceString + "</strong>]"));
+                    }
+
                     majorResp.setMsg2015(major.getMsg2015());
                     majorResp.setMsg2016(major.getMsg2016());
                     majorResp.setMsg2017(major.getMsg2017());
@@ -237,9 +304,12 @@ public class SchoolController {
                     majorRespList.add(majorResp);
                 }
 
-                schoolResp.setMajorList(majorRespList);
-                respList.add(schoolResp);
+                    schoolResp.setMajorList(majorRespList);
+                    respList.add(schoolResp);
             }
+
+            System.out.print(JSONArray.toJSONString(respList));
+            redisUtil.set("schoolV2_" + typeString, JSONArray.toJSONString(respList));
             resp.setCode(1);
             resp.setMsg("请求成功");
             resp.setList(respList);

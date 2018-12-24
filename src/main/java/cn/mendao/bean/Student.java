@@ -30,6 +30,7 @@ public class Student {
     private int chemistry;//'化学/历史成绩'
     private int biology;//'生物/地理成绩'
     private int comprehensive;//'综合成绩'
+    private int sortNum;//排序
     private long createdUser;
     private Date createdTime;
 
@@ -243,6 +244,14 @@ public class Student {
 
     public void setComprehensive(int comprehensive) {
         this.comprehensive = comprehensive;
+    }
+
+    public int getSortNum() {
+        return sortNum;
+    }
+
+    public void setSortNum(int sortNum) {
+        this.sortNum = sortNum;
     }
 
     public long getCreatedUser() {

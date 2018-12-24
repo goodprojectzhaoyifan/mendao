@@ -29,16 +29,17 @@
         chemistry,
         biology,
         comprehensive,
+        sort_num as sortNum,
         created_time AS createdTime
     </sql>
 
     <insert id="insertDate">
         INSERT INTO student(name,created_user,stu_no,exam_no,card_no,major,sex,school,
         rank,stu_num,stu_type,score,precedence,policy,limit_content,other,chinese,english,manth,
-        physics,chemistry,biology,comprehensive)
+        physics,chemistry,biology,comprehensive,sort_num)
         VALUES (#{student.name},#{student.createdUser},#{student.stuNo},#{student.examNo},#{student.cardNo},#{student.major},#{student.sex},#{student.school},
             #{student.rank},#{student.stuNum},#{student.stuType},#{student.score},#{student.precedence},#{student.policy},#{student.limitContent},#{student.other},#{student.chinese},#{student.english},#{student.manth},
-            #{student.physics},#{student.chemistry},#{student.biology},#{student.comprehensive}
+            #{student.physics},#{student.chemistry},#{student.biology},#{student.comprehensive},#{student.sortNum}
         )
     </insert>
 
@@ -72,7 +73,8 @@
         physics=#{student.physics},
         chemistry=#{student.chemistry},
         biology=#{student.biology},
-        comprehensive=#{student.comprehensive}
+        comprehensive=#{student.comprehensive},
+        sort_num=#{student.sortNum}
         WHERE id = #{student.id}
     </update>
 
@@ -83,7 +85,7 @@
         WHERE 1=1
         <if test="createdUser>0">And created_user = #{createdUser} </if>
         <if test="stuNo != null">And stu_no = #{stuNo} </if>
-        ORDER BY id desc
+        ORDER BY sort_num desc
     </select>
 
     <select id="getByStuNo" resultType="cn.mendao.bean.Student">

@@ -16,6 +16,7 @@ public class StudentResp {
     private int precedence;
     private String ranking;
     private int isScheme;
+    private int sortNum;
 
 
     public long getId() {
@@ -96,5 +97,13 @@ public class StudentResp {
 
     public void setIsScheme(int isScheme) {
         this.isScheme = isScheme;
+    }
+
+    public int getSortNum() {
+        return sortNum;
+    }
+
+    public void setSortNum(int sortNum) {
+        this.sortNum = sortNum;
     }
 }

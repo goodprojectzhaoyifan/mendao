@@ -4,7 +4,7 @@
 <mapper namespace="cn.mendao.dao.MajorDao">
 
     <select id="getListByParam" resultType="cn.mendao.bean.Major">
-        SELECT type,code,major_name AS majorName,level,msg2015,msg2016,msg2017,plan2017,weici2017,plan2018,major_limit AS majorLimit,major_desc AS majorDesc
+        SELECT type,major_code as code,major_name AS majorName,level,msg2015,msg2016,msg2017,plan2017,weici2017,plan2018,major_limit AS majorLimit,major_desc AS majorDesc
         FROM major
         <where>
             <if test="type>=0"> And type = #{type} </if>

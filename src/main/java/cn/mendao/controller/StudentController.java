@@ -87,7 +87,7 @@ public class StudentController {
                 oldStudent.setChemistry(student.getChemistry());
                 oldStudent.setBiology(student.getBiology());
                 oldStudent.setComprehensive(student.getComprehensive());
-
+                oldStudent.setSortNum(student.getSortNum());
                 studentService.updateData(oldStudent);
             }else{
                 if(student == null){
@@ -150,6 +150,7 @@ public class StudentController {
                     studentResp.setSchool(student.getSchool());
                     studentResp.setScore(student.getScore());
                     studentResp.setPrecedence(student.getPrecedence());
+                    studentResp.setSortNum(student.getSortNum());
                     if(student.getStuNum()>0 && student.getRank()>0){
                         studentResp.setRanking(student.getRank()+"/"+student.getStuNum());
                     }

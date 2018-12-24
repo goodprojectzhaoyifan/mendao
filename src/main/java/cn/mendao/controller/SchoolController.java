@@ -229,6 +229,8 @@ public class SchoolController {
                 //对比招生计划
                 if(school.getPlan2018()-school.getPlan2017()>0){
                     schoolResp.setPlanStatus2018(1);
+                }else if(school.getPlan2018()-school.getPlan2017()==0){
+                    schoolResp.setPlanStatus2018(2);
                 }else{
                     schoolResp.setPlanStatus2018(0);
                 }
@@ -297,6 +299,8 @@ public class SchoolController {
                     //对比招生计划
                     if(major.getPlan2018()-major.getPlan2017()>0){
                         majorResp.setPlanStatus2018(1);
+                    }else if(major.getPlan2018()-major.getPlan2017()==0){
+                        majorResp.setPlanStatus2018(2);
                     }else{
                         majorResp.setPlanStatus2018(0);
                     }

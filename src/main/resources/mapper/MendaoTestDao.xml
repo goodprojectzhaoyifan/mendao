@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.mendao.dao.MendaoTestDao">
+
+    <select id="findOne" resultType="cn.mendao.bean.MendaoTest">
+        SELECT id,name,image,test_desc AS testDesc,topic_group AS topicGroup
+        FROM mendao_test
+        WHERE id=#{id}
+    </select>
+
+    <select id="getList" resultType="cn.mendao.bean.MendaoTest">
+        SELECT id,name,image,test_desc AS testDesc,topic_group AS topicGroup
+        FROM mendao_test
+    </select>
+
+    <insert id="insertDate" useGeneratedKeys="true" keyProperty="mendaoTest.id" parameterType="cn.mendao.bean.MendaoTest">
+        INSERT INTO mendao_test(name,image,test_desc,topic_group)
+        VALUES (#{mendaoTest.name},#{mendaoTest.image},#{mendaoTest.testDesc},#{mendaoTest.topicGroup})
+
+    </insert>
+
+    <update id="updateDate">
+        UPDATE mendao_test
+        set name=#{mendaoTest.name},
+            image=#{mendaoTest.image},
+            test_desc=#{mendaoTest.testDesc},
+            topic_group=#{mendaoTest.topicGroup}
+        WHERE id = #{mendaoTest.id}
+    </update>
+</mapper>
+

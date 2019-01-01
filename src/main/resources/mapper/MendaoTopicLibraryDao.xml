@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.mendao.dao.MendaoTopicLibraryDao">
+
+    <select id="findOne" resultType="cn.mendao.bean.MendaoTopicLibrary">
+        SELECT id,test_id AS testId,topic_library_name AS topicLibraryName,topic_group_id AS topicGroupId,options,create_time AS createTime
+        FROM mendao_topic_library
+        WHERE id=#{id}
+    </select>
+
+    <select id="getListByTestId" resultType="cn.mendao.bean.MendaoTopicLibrary">
+        SELECT id,test_id AS testId,topic_library_name,topic_group_id AS topicGroupId,options,create_time AS createTime
+        FROM mendao_topic_library
+        WHERE test_id = #{testId}
+    </select>
+
+    <insert id="insertDate" useGeneratedKeys="true" keyProperty="topicLibrary.id" parameterType="cn.mendao.bean.MendaoTopicLibrary">
+        INSERT INTO mendao_topic_library(test_id,topic_library_name,topic_group_id,options ,create_time)
+        VALUES (#{topicLibrary.testId},#{topicLibrary.topicLibraryName},#{topicLibrary.topicGroupId},#{topicLibrary.options},#{topicLibrary.createTime})
+
+    </insert>
+
+    <update id="updateDate">
+        UPDATE mendao_topic_library
+        set topic_group_id = #{topicLibrary.topicGroupId},
+        topic_group_id = #{topicLibrary.topicLibraryName},
+        options = #{topicLibrary.options}
+        WHERE id = #{topicLibrary.id}
+    </update>
+</mapper>
+

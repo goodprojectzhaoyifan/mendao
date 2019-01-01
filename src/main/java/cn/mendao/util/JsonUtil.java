@@ -6,6 +6,7 @@ import org.codehaus.jackson.JsonProcessingException;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * json工具类
@@ -49,5 +50,10 @@ public class JsonUtil {
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	//返回 list 对象数组  字符串JSON要添加[]
+	public static <T extends Object> List<T> jsonToObjectList(String strJson,Class<T> clazz){
+		return JSONObject.parseArray(strJson, clazz);
 	}
 }

@@ -37,4 +37,9 @@ public class MendaoTopicLibraryServiceImpl implements MendaoTopicLibraryService 
         topicLibraryDao.updateDate(topicLibrary);
     }
 
+    @Override
+    public void deleteByTestId(long testId) {
+        topicLibraryDao.deleteByTestId(testId);
+    }
+
 }

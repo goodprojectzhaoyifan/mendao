@@ -10,7 +10,7 @@
     </select>
 
     <select id="getListByTestId" resultType="cn.mendao.bean.MendaoTopicLibrary">
-        SELECT id,test_id AS testId,topic_library_name,topic_group_id AS topicGroupId,options,create_time AS createTime
+        SELECT id,test_id AS testId,topic_library_name AS topicLibraryName,topic_group_id AS topicGroupId,options,create_time AS createTime
         FROM mendao_topic_library
         WHERE test_id = #{testId}
     </select>
@@ -28,5 +28,9 @@
         options = #{topicLibrary.options}
         WHERE id = #{topicLibrary.id}
     </update>
+
+    <delete id="deleteByTestId">
+        DELETE FROM mendao_topic_library WHERE test_id = #{testId}
+    </delete>
 </mapper>
 

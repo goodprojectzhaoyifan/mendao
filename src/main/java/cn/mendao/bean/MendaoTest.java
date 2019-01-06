@@ -8,8 +8,10 @@ public class MendaoTest {
     private long id;
     private String name;
     private String image;
+    private String introduction;
     private String testDesc;
     private String topicGroup;
+    private int status;
 
 
     public long getId() {
@@ -36,6 +38,14 @@ public class MendaoTest {
         this.image = image;
     }
 
+    public String getIntroduction() {
+        return introduction;
+    }
+
+    public void setIntroduction(String introduction) {
+        this.introduction = introduction;
+    }
+
     public String getTestDesc() {
         return testDesc;
     }
@@ -50,5 +60,13 @@ public class MendaoTest {
 
     public void setTopicGroup(String topicGroup) {
         this.topicGroup = topicGroup;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
     }
 }

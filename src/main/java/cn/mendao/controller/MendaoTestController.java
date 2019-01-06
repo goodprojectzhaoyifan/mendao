@@ -50,37 +50,47 @@ public class MendaoTestController {
                 resp.setMsg("参数为空");
             }
 
-            MendaoTest mendaoTest = JsonUtil.tranjsonStrToObject(data, MendaoTest.class);
-            if(mendaoTest != null && mendaoTest.getId()>0){
-                MendaoTest oldMendaoTest = mendaoTestService.findOne(mendaoTest.getId());
-                oldMendaoTest.setName(mendaoTest.getName());
-                oldMendaoTest.setImage(mendaoTest.getImage());
-                oldMendaoTest.setTestDesc(mendaoTest.getTestDesc());
-                oldMendaoTest.setTopicGroup(mendaoTest.getTopicGroup());
+            MendaoTestReq mendaoTestReq = JsonUtil.tranjsonStrToObject(data, MendaoTestReq.class);
+            if(mendaoTestReq != null && mendaoTestReq.getTestId()>0){
+                MendaoTest oldMendaoTest = mendaoTestService.findOne(mendaoTestReq.getTestId());
+                oldMendaoTest.setName(mendaoTestReq.getTestName());
+                oldMendaoTest.setImage(mendaoTestReq.getTestImage());
+                oldMendaoTest.setIntroduction(mendaoTestReq.getTestIntroduction());
+                oldMendaoTest.setTestDesc(mendaoTestReq.getTestDesc());
+                oldMendaoTest.setTopicGroup(mendaoTestReq.getTopicGroup());
 
-                if(mendaoTest.getTopicGroup() != null && !mendaoTest.getTopicGroup().equals("")){
-                    List<MendaoTopicGroupResp> topicGroupList = JsonUtil.jsonToObjectList(mendaoTest.getTopicGroup(),MendaoTopicGroupResp.class);
+                if(mendaoTestReq.getTopicGroup() != null && !mendaoTestReq.getTopicGroup().equals("")){
+                    List<MendaoTopicGroupResp> topicGroupList = JsonUtil.jsonToObjectList(mendaoTestReq.getTopicGroup(),MendaoTopicGroupResp.class);
                     List<MendaoTopicGroupResp> saveList = new ArrayList<>();
                     int i = 1;
                     for(MendaoTopicGroupResp topicGroup:topicGroupList){
-                        topicGroup.setTopicGroupId(mendaoTest.getId()+"_"+String.format("%04d", i));
+                        topicGroup.setTopicGroupId(mendaoTestReq.getTestId()+"_"+String.format("%04d", i));
                         saveList.add(topicGroup);
                         i++;
                     }
-                    mendaoTest.setTopicGroup(JsonUtil.tranObjectToJsonStr(saveList));
+                    oldMendaoTest.setTopicGroup(JsonUtil.tranObjectToJsonStr(saveList));
                 }
 
-                mendaoTestService.updateDate(mendaoTest);
+                mendaoTestService.updateDate(oldMendaoTest);
+                resp.setTestId(mendaoTestReq.getTestId());
             }else{
-                if(mendaoTest == null){
+                if(mendaoTestReq == null){
                     resp.setCode(0);
                     resp.setMsg("参数错误");
                     return resp;
                 }
+
+                MendaoTest mendaoTest = new MendaoTest();
+                mendaoTest.setImage(mendaoTestReq.getTestImage());
+                mendaoTest.setName(mendaoTestReq.getTestName());
+                mendaoTest.setTestDesc(mendaoTestReq.getTestDesc());
+                mendaoTest.setIntroduction(mendaoTestReq.getTestIntroduction());
+                mendaoTest.setStatus(1);
+
                 mendaoTestService.insertDate(mendaoTest);
                 System.out.println(mendaoTest.getId());
-                if(mendaoTest.getTopicGroup() != null && !mendaoTest.getTopicGroup().equals("")){
-                    List<MendaoTopicGroupResp> topicGroupList = JsonUtil.jsonToObjectList(mendaoTest.getTopicGroup(),MendaoTopicGroupResp.class);
+                if(mendaoTestReq.getTopicGroup() != null && !mendaoTestReq.getTopicGroup().equals("")){
+                    List<MendaoTopicGroupResp> topicGroupList = JsonUtil.jsonToObjectList(mendaoTestReq.getTopicGroup(),MendaoTopicGroupResp.class);
                     List<MendaoTopicGroupResp> saveList = new ArrayList<>();
                     int i = 1;
                     for(MendaoTopicGroupResp topicGroup:topicGroupList){
@@ -91,9 +101,10 @@ public class MendaoTestController {
                     mendaoTest.setTopicGroup(JsonUtil.tranObjectToJsonStr(saveList));
                     mendaoTestService.updateDate(mendaoTest);
                 }
+                resp.setTestId(mendaoTest.getId());
             }
 
-            resp.setTestId(mendaoTest.getId());
+
             resp.setCode(1);
             resp.setMsg("请求成功");
 
@@ -111,16 +122,26 @@ public class MendaoTestController {
         BaseRespList resp = new BaseRespList();
         try{
 
-            List<MendaoTestResp> respList = new ArrayList<MendaoTestResp>();
+            String data = request.getParameter("data");
+            System.out.println("getTest---->"+data);
+            if(data == null){
+                resp.setCode(0);
+                resp.setMsg("参数为空");
+            }
 
-            List<MendaoTest> list = mendaoTestService.getList();
+            MendaoTestReq mendaoTestReq = JsonUtil.tranjsonStrToObject(data, MendaoTestReq.class);
+            List<MendaoTestResp> respList = new ArrayList<MendaoTestResp>();
+            //type=1后台获取全部type=2前台获取列表
+            List<MendaoTest> list = mendaoTestService.getList(mendaoTestReq.getType());
             if(list != null && list.size()>0){
                 for(MendaoTest test:list){
                     MendaoTestResp mendaoTestResp = new MendaoTestResp();
                     mendaoTestResp.setTestId(test.getId());
                     mendaoTestResp.setTestName(test.getName());
                     mendaoTestResp.setTestImage(test.getImage());
+                    mendaoTestResp.setTestIntroduction(test.getIntroduction());
                     mendaoTestResp.setTestDesc(test.getTestDesc());
+                    mendaoTestResp.setStatus(test.getStatus());
                     respList.add(mendaoTestResp);
                 }
             }
@@ -137,6 +158,40 @@ public class MendaoTestController {
 
     }
 
+    @ResponseBody
+    @RequestMapping(value = "/optionTestByType")
+    public Object editTest(HttpServletRequest request){
+        BaseResp resp = new BaseResp();
+        try{
+            String data = request.getParameter("data");
+            System.out.println("optionTestByType---->"+data);
+            if(data == null){
+                resp.setCode(0);
+                resp.setMsg("参数为空");
+            }
+
+            MendaoTestReq mendaoTestReq = JsonUtil.tranjsonStrToObject(data, MendaoTestReq.class);
+
+            MendaoTest oldMendaoTest = mendaoTestService.findOne(mendaoTestReq.getTestId());
+            if(mendaoTestReq.getType() == 1){
+                oldMendaoTest.setStatus(2);
+                mendaoTestService.updateDate(oldMendaoTest);
+            }else if(mendaoTestReq.getType() == 2){
+                oldMendaoTest.setStatus(-1);
+                mendaoTestService.updateDate(oldMendaoTest);
+            }
+
+            resp.setCode(1);
+            resp.setMsg("请求成功");
+
+        }catch (Exception e){
+            e.printStackTrace();
+            resp.setCode(0);
+            resp.setMsg("发生异常");
+        }
+        return resp;
+
+    }
 
     @ResponseBody
     @RequestMapping(value = "/getTestById")
@@ -159,6 +214,8 @@ public class MendaoTestController {
             testResp.setTestName(mendaoTest.getName());
             testResp.setTestImage(mendaoTest.getImage());
             testResp.setTestDesc(mendaoTest.getTestDesc());
+            testResp.setTestIntroduction(mendaoTest.getIntroduction());
+            testResp.setStatus(mendaoTest.getStatus());
 
             resp.setData(testResp);
             resp.setCode(1);
@@ -178,7 +235,7 @@ public class MendaoTestController {
         BaseRespList resp = new BaseRespList();
         try{
             String data = request.getParameter("data");
-            System.out.println("addTest---->"+data);
+            System.out.println("getTopicByTestId---->"+data);
             if(data == null){
                 resp.setCode(0);
                 resp.setMsg("参数为空");
@@ -211,28 +268,35 @@ public class MendaoTestController {
         BaseResp resp = new BaseResp();
         try{
             String data = request.getParameter("data");
-            System.out.println("addTest---->"+data);
+            System.out.println("addTopicLibrary---->"+data);
             if(data == null){
                 resp.setCode(0);
                 resp.setMsg("参数为空");
             }
 
-            MendaoTopicLibrary topicLibrary = JsonUtil.tranjsonStrToObject(data, MendaoTopicLibrary.class);
-            if(topicLibrary != null && topicLibrary.getId()>0){
-                MendaoTopicLibrary oldTopicLibrary = topicLibraryService.findOne(topicLibrary.getId());
-                oldTopicLibrary.setTopicLibraryName(topicLibrary.getTopicLibraryName());
-                oldTopicLibrary.setTopicGroupId(topicLibrary.getTopicGroupId());
-                oldTopicLibrary.setOptions(topicLibrary.getOptions());
-                topicLibraryService.updateDate(oldTopicLibrary);
-            }else{
-                if(topicLibrary == null){
-                    resp.setCode(0);
-                    resp.setMsg("参数错误");
-                    return resp;
+            List<MendaoTopicLibrary> topicLibraryList = JsonUtil.jsonToObjectList(data, MendaoTopicLibrary.class);
+            if(topicLibraryList != null && topicLibraryList.size()>0){
+                MendaoTopicLibrary mendaoTopicLibrary = topicLibraryList.get(0);
+                topicLibraryService.deleteByTestId(mendaoTopicLibrary.getTestId());
+                for(MendaoTopicLibrary topicLibrary:topicLibraryList){
+                    if(topicLibrary != null && topicLibrary.getId()>0){
+                        MendaoTopicLibrary oldTopicLibrary = topicLibraryService.findOne(topicLibrary.getId());
+                        oldTopicLibrary.setTopicLibraryName(topicLibrary.getTopicLibraryName());
+                        oldTopicLibrary.setTopicGroupId(topicLibrary.getTopicGroupId());
+                        oldTopicLibrary.setOptions(topicLibrary.getOptions());
+                        topicLibraryService.updateDate(oldTopicLibrary);
+                    }else{
+                        if(topicLibrary == null){
+                            resp.setCode(0);
+                            resp.setMsg("参数错误");
+                            return resp;
+                        }
+                        topicLibrary.setCreateTime(new Date());
+                        topicLibraryService.insertDate(topicLibrary);
+                    }
                 }
-                topicLibrary.setCreateTime(new Date());
-                topicLibraryService.insertDate(topicLibrary);
             }
+
 
             resp.setCode(1);
             resp.setMsg("请求成功");
@@ -251,7 +315,7 @@ public class MendaoTestController {
         BaseRespList resp = new BaseRespList();
         try{
             String data = request.getParameter("data");
-            System.out.println("addTest---->"+data);
+            System.out.println("getTopicLibrary---->"+data);
             if(data == null){
                 resp.setCode(0);
                 resp.setMsg("参数为空");
@@ -289,7 +353,7 @@ public class MendaoTestController {
         BaseResp resp = new BaseResp();
         try{
             String data = request.getParameter("data");
-            System.out.println("addTest---->"+data);
+            System.out.println("addTestReport---->"+data);
             if(data == null){
                 resp.setCode(0);
                 resp.setMsg("参数为空");
@@ -340,7 +404,7 @@ public class MendaoTestController {
         BaseRespData resp = new BaseRespData();
         try{
             String data = request.getParameter("data");
-            System.out.println("addTest---->"+data);
+            System.out.println("getTestReport---->"+data);
             if(data == null){
                 resp.setCode(0);
                 resp.setMsg("参数为空");

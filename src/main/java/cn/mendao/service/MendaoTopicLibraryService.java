@@ -18,4 +18,5 @@ public interface MendaoTopicLibraryService {
 
     void updateDate(MendaoTopicLibrary topicLibrary);
 
+    void deleteByTestId(long testId);
 }

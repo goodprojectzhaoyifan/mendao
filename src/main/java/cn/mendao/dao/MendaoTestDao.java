@@ -12,7 +12,7 @@ public interface MendaoTestDao {
 
     MendaoTest findOne(@Param("id") Long id);
 
-    List<MendaoTest> getList();
+    List<MendaoTest> getList(@Param("type")int type);
 
     int insertDate(@Param("mendaoTest") MendaoTest mendaoTest);
 

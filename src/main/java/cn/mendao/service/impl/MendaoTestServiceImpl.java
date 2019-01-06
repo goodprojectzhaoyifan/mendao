@@ -23,8 +23,8 @@ public class MendaoTestServiceImpl implements MendaoTestService{
     }
 
     @Override
-    public List<MendaoTest> getList() {
-        return mendaoTestDao.getList();
+    public List<MendaoTest> getList(int type) {
+        return mendaoTestDao.getList(type);
     }
 
     @Override

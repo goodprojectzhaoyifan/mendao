@@ -9,6 +9,8 @@ public class MendaoTopicGroupResp {
     private String topicGroupId;
     private String topicGroupCode;
     private double topicGroupNum;
+    private long topicGroupScore1;
+    private long topicGroupScore2;
 
     public String getTopicGroupName() {
         return topicGroupName;
@@ -40,5 +42,21 @@ public class MendaoTopicGroupResp {
 
     public void setTopicGroupNum(double topicGroupNum) {
         this.topicGroupNum = topicGroupNum;
+    }
+
+    public long getTopicGroupScore1() {
+        return topicGroupScore1;
+    }
+
+    public void setTopicGroupScore1(long topicGroupScore1) {
+        this.topicGroupScore1 = topicGroupScore1;
+    }
+
+    public long getTopicGroupScore2() {
+        return topicGroupScore2;
+    }
+
+    public void setTopicGroupScore2(long topicGroupScore2) {
+        this.topicGroupScore2 = topicGroupScore2;
     }
 }

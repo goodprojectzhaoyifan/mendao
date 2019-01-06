@@ -4,19 +4,22 @@
 <mapper namespace="cn.mendao.dao.MendaoTestDao">
 
     <select id="findOne" resultType="cn.mendao.bean.MendaoTest">
-        SELECT id,name,image,test_desc AS testDesc,topic_group AS topicGroup
+        SELECT id,name,image,introduction,test_desc AS testDesc,topic_group AS topicGroup,status
         FROM mendao_test
         WHERE id=#{id}
     </select>
 
     <select id="getList" resultType="cn.mendao.bean.MendaoTest">
-        SELECT id,name,image,test_desc AS testDesc,topic_group AS topicGroup
+        SELECT id,name,image,introduction,test_desc AS testDesc,topic_group AS topicGroup,status
         FROM mendao_test
+        WHERE 1=1
+        <if test="type==1"> And status>0</if>
+        <if test="type==2"> And status=1</if>
     </select>
 
     <insert id="insertDate" useGeneratedKeys="true" keyProperty="mendaoTest.id" parameterType="cn.mendao.bean.MendaoTest">
-        INSERT INTO mendao_test(name,image,test_desc,topic_group)
-        VALUES (#{mendaoTest.name},#{mendaoTest.image},#{mendaoTest.testDesc},#{mendaoTest.topicGroup})
+        INSERT INTO mendao_test(name,image,introduction,test_desc,topic_group,status)
+        VALUES (#{mendaoTest.name},#{mendaoTest.image},#{mendaoTest.introduction},#{mendaoTest.testDesc},#{mendaoTest.topicGroup},#{mendaoTest.status})
 
     </insert>
 
@@ -24,8 +27,10 @@
         UPDATE mendao_test
         set name=#{mendaoTest.name},
             image=#{mendaoTest.image},
+            introduction=#{mendaoTest.introduction},
             test_desc=#{mendaoTest.testDesc},
-            topic_group=#{mendaoTest.topicGroup}
+            topic_group=#{mendaoTest.topicGroup},
+            status=#{mendaoTest.status}
         WHERE id = #{mendaoTest.id}
     </update>
 </mapper>

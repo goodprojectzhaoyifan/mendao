@@ -12,7 +12,7 @@ public interface MendaoTestService {
 
     MendaoTest findOne(Long id);
 
-    List<MendaoTest> getList();
+    List<MendaoTest> getList(int type);
 
     void insertDate(MendaoTest mendaoTest);
 

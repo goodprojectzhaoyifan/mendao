@@ -17,4 +17,6 @@ public interface MendaoTopicLibraryDao {
     int insertDate(@Param("topicLibrary") MendaoTopicLibrary topicLibrary);
 
     void updateDate(@Param("topicLibrary") MendaoTopicLibrary topicLibrary);
+
+    void deleteByTestId(@Param("testId") long testId);
 }

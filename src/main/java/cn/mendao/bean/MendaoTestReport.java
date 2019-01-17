@@ -18,6 +18,7 @@ public class MendaoTestReport {
     private String topicReport;
     private int isShowTopicReportList;
     private String moreSuggest;
+    private String moreSuggestTitle;
     private int isShowMoreSuggest;
     private String reportResult;
     private int isShowReportResult;
@@ -111,6 +112,14 @@ public class MendaoTestReport {
 
     public void setMoreSuggest(String moreSuggest) {
         this.moreSuggest = moreSuggest;
+    }
+
+    public String getMoreSuggestTitle() {
+        return moreSuggestTitle;
+    }
+
+    public void setMoreSuggestTitle(String moreSuggestTitle) {
+        this.moreSuggestTitle = moreSuggestTitle;
     }
 
     public int getIsShowMoreSuggest() {

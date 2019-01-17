@@ -1,5 +1,7 @@
 package cn.mendao.req;
 
+import java.util.List;
+
 /**
  * Created by warden on 18/12/25.
  */
@@ -12,6 +14,8 @@ public class MendaoTestReq {
     private String topicGroup;
 
     private int type;
+
+    private List<TestTimu> list;
 
 
 
@@ -70,5 +74,13 @@ public class MendaoTestReq {
 
     public void setType(int type) {
         this.type = type;
+    }
+
+    public List<TestTimu> getList() {
+        return list;
+    }
+
+    public void setList(List<TestTimu> list) {
+        this.list = list;
     }
 }

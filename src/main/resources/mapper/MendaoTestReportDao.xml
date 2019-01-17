@@ -6,7 +6,7 @@
     <select id="findOne" resultType="cn.mendao.bean.MendaoTestReport">
         SELECT id, test_id AS testId, report_desc AS reportDesc, is_show_report_desc AS isShowReportDesc,
           table_set AS tableSet, is_show_table_set AS isShowTableSet, table_result AS tableResult, is_show_table_result AS isShowTableResult,
-          topic_report AS topicReport, is_show_topic_report_list AS isShowTopicReportList,more_suggest AS moreSuggest, is_show_more_suggest AS isShowMoreSuggest,
+          topic_report AS topicReport, is_show_topic_report_list AS isShowTopicReportList,more_suggest AS moreSuggest, more_suggest_title AS moreSuggestTitle, is_show_more_suggest AS isShowMoreSuggest,
           report_result AS reportResult, is_show_report_result AS isShowReportResult, last_image AS lastImage, is_show_last_image AS isShowLastImage, create_time AS createTime
         FROM mendao_test_report
         WHERE id=#{id}
@@ -15,7 +15,7 @@
     <select id="getListByTestId" resultType="cn.mendao.bean.MendaoTestReport">
         SELECT id, test_id AS testId, report_desc AS reportDesc, is_show_report_desc AS isShowReportDesc,
           table_set AS tableSet, is_show_table_set AS isShowTableSet, table_result AS tableResult, is_show_table_result AS isShowTableResult,
-          topic_report AS topicReport, is_show_topic_report_list AS isShowTopicReportList,more_suggest AS moreSuggest, is_show_more_suggest AS isShowMoreSuggest,
+          topic_report AS topicReport, is_show_topic_report_list AS isShowTopicReportList,more_suggest AS moreSuggest, more_suggest_title AS moreSuggestTitle, is_show_more_suggest AS isShowMoreSuggest,
           report_result AS reportResult, is_show_report_result AS isShowReportResult, last_image AS lastImage, is_show_last_image AS isShowLastImage, create_time AS createTime
         FROM mendao_test_report
         WHERE test_id = #{testId}
@@ -23,9 +23,9 @@
 
     <insert id="insertDate" useGeneratedKeys="true" keyProperty="testReport.id" parameterType="cn.mendao.bean.MendaoTestReport">
         INSERT INTO mendao_test_report(test_id, report_desc, is_show_report_desc,table_set, is_show_table_set, table_Result, is_show_table_result,
-          topic_report, is_show_topic_report_list, more_suggest, is_show_more_suggest, report_result, is_show_report_result, last_image, is_show_last_image, create_time)
+          topic_report, is_show_topic_report_list, more_suggest, more_suggest_title, is_show_more_suggest, report_result, is_show_report_result, last_image, is_show_last_image, create_time)
         VALUES (#{testReport.testId},#{testReport.reportDesc},#{testReport.isShowReportDesc},#{testReport.tableSet},#{testReport.isShowTableSet},#{testReport.tableResult},#{testReport.isShowTableResult},
-        #{testReport.topicReport},#{testReport.isShowTopicReportList},#{testReport.moreSuggest},#{testReport.isShowMoreSuggest},#{testReport.reportResult},#{testReport.isShowReportResult},#{testReport.lastImage},#{testReport.isShowLastImage},#{testReport.createTime})
+        #{testReport.topicReport},#{testReport.isShowTopicReportList},#{testReport.moreSuggest},#{testReport.moreSuggestTitle},#{testReport.isShowMoreSuggest},#{testReport.reportResult},#{testReport.isShowReportResult},#{testReport.lastImage},#{testReport.isShowLastImage},#{testReport.createTime})
     </insert>
 
     <update id="updateDate">
@@ -39,6 +39,7 @@
             topic_report=#{testReport.topicReport},
             is_show_topic_report_list=#{testReport.isShowTopicReportList},
             more_suggest=#{testReport.moreSuggest},
+            more_suggest_title=#{testReport.moreSuggestTitle},
             is_show_more_suggest=#{testReport.isShowMoreSuggest},
             report_result=#{testReport.reportResult},
             is_show_report_result=#{testReport.isShowReportResult},

@@ -3,7 +3,7 @@ package cn.mendao.controller;
 import cn.mendao.bean.MendaoTest;
 import cn.mendao.bean.MendaoTestReport;
 import cn.mendao.bean.MendaoTopicLibrary;
-import cn.mendao.req.MendaoTestReq;
+import cn.mendao.req.*;
 import cn.mendao.resp.*;
 import cn.mendao.service.MendaoTestReportService;
 import cn.mendao.service.MendaoTestService;
@@ -18,9 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Scope("prototype")
 @Controller("mendaoTestController")
@@ -370,6 +368,7 @@ public class MendaoTestController {
                 oldTestReport.setTopicReport(testReport.getTopicReport());
                 oldTestReport.setIsShowTopicReportList(testReport.getIsShowTopicReportList());
                 oldTestReport.setMoreSuggest(testReport.getMoreSuggest());
+                oldTestReport.setMoreSuggestTitle(testReport.getMoreSuggestTitle());
                 oldTestReport.setIsShowMoreSuggest(testReport.getIsShowMoreSuggest());
                 oldTestReport.setReportResult(testReport.getReportResult());
                 oldTestReport.setIsShowReportResult(testReport.getIsShowReportResult());
@@ -420,6 +419,208 @@ public class MendaoTestController {
                 resp.setData(report);
             }
 
+            resp.setCode(1);
+            resp.setMsg("请求成功");
+        }catch (Exception e){
+            e.printStackTrace();
+            resp.setCode(0);
+            resp.setMsg("发生异常");
+        }
+        return resp;
+    }
+
+
+    @ResponseBody
+    @RequestMapping(value = "/commitTest")
+    public Object commitTest(HttpServletRequest request) {
+
+        BaseRespData resp = new BaseRespData();
+        try{
+            String data = request.getParameter("data");
+            System.out.println("commitTest---->"+data);
+            if(data == null){
+                resp.setCode(0);
+                resp.setMsg("参数为空");
+            }
+
+            MendaoTestReq mendaoTestReq = JsonUtil.tranjsonStrToObject(data, MendaoTestReq.class);
+
+            if(mendaoTestReq.getList() != null && mendaoTestReq.getList().size()>0){
+                List<TestTimu> list = mendaoTestReq.getList();
+                Map<String, Integer> map = new HashMap<>();
+                for(TestTimu timu : list){
+                    if(map.containsKey(timu.getTopicGroupId())){
+                        map.put(timu.getTopicGroupId(), map.get(timu.getTopicGroupId())+timu.getScore());
+                    }else{
+                        map.put(timu.getTopicGroupId(), timu.getScore());
+                    }
+                }
+
+
+                MendaoCommitResp commitResp = new MendaoCommitResp();
+
+                List<MendaoTestReport> reportList = testReportService.getListByTestId(mendaoTestReq.getTestId());
+                MendaoTest mendaoTest = mendaoTestService.findOne(mendaoTestReq.getTestId());
+
+                if(reportList != null && reportList.size()>0){
+                    MendaoTestReport report = reportList.get(0);
+
+                    commitResp.setTestName(mendaoTest.getName());
+                    if(report.getIsShowReportDesc() == 1){
+                        commitResp.setReportDesc(report.getReportDesc());
+                    }
+                    //得分list
+                    List<TableTestMsg> tableTestMsgList = new ArrayList<>();
+                    //图标设置
+                    if(report.getIsShowTableSet() == 1){
+                        MendaoTableSet mendaoTableSet = JsonUtil.tranjsonStrToObject(report.getTableSet(), MendaoTableSet.class);
+                        commitResp.setTableTitle(mendaoTableSet.getTableTitle());
+
+                        MendaoTablesSetResp mendaoTablesSetResp = new MendaoTablesSetResp();
+                        mendaoTablesSetResp.setTableName(mendaoTableSet.getTableName());
+                        mendaoTablesSetResp.setTableColor(mendaoTableSet.getTableColor());
+
+                        List<TopicGroup> topicGroupList = JsonUtil.jsonToObjectList(mendaoTest.getTopicGroup(), TopicGroup.class);
+                        for (TopicGroup topicGroup:topicGroupList){
+                            TableTestMsg tableTestMsg = new TableTestMsg();
+                            tableTestMsg.setTopicGroupId(topicGroup.getTopicGroupId());
+                            tableTestMsg.setTopicGroupCode(topicGroup.getTopicGroupCode());
+                            tableTestMsg.setUnitName(topicGroup.getTopicGroupName());
+                            tableTestMsg.setUnitScore(map.get(topicGroup.getTopicGroupId()) + "");
+
+                            tableTestMsgList.add(tableTestMsg);
+                        }
+
+                        mendaoTablesSetResp.setTableTestMsg(tableTestMsgList);
+
+                        commitResp.setTableSet(mendaoTablesSetResp);
+                    }
+
+                    //list排序
+                    if(tableTestMsgList != null && tableTestMsgList.size()>0){
+                        Collections.sort(tableTestMsgList, new Comparator<TableTestMsg>() {
+                            public int compare(TableTestMsg arg0, TableTestMsg arg1) {
+                                return arg0.getUnitScore().compareTo(arg1.getUnitScore());
+                            }
+                        });
+                    }
+                    //图标总结
+                    if(report.getIsShowTableResult() == 1){
+                        MendaoTableResult tableResult = JsonUtil.tranjsonStrToObject(report.getTableResult(), MendaoTableResult.class);
+
+                        MendaoTableResultResp tableResultResp = new MendaoTableResultResp();
+                        tableResultResp.setUpContent(tableResult.getUpDesc());
+                        StringBuffer downContent = new StringBuffer();
+                        for(int i=0;i<tableResult.getTopNum();i++){
+                            if(i==0){
+                                downContent.append(tableTestMsgList.get(i).getUnitName());
+                            }else{
+                                downContent.append(tableResult.getSplitDesc());
+                                downContent.append(tableTestMsgList.get(i).getUnitName());
+                            }
+                        }
+                        tableResultResp.setDownContent(downContent.toString());
+
+                        commitResp.setTableResult(tableResultResp);
+                    }
+                    //题组总结
+                    if(report.getIsShowTopicReportList() == 1){
+                        MendaoTopicReport topicReport = JsonUtil.tranjsonStrToObject(report.getTopicReport(), MendaoTopicReport.class);
+
+                        MendaoTopicReportResp topicReportResp = new MendaoTopicReportResp();
+
+                        topicReportResp.setTopicReportTitle(topicReport.getTitleWarning());
+
+                        if(topicReport.getTopicReportList() != null && topicReport.getTopicReportList().size()>0){
+                            List<TopicReport> topicReportBeanList = new ArrayList<>();
+                            if(topicReport.getOrderType() == 1){
+                                List<TopicGroup> topicGroupList = JsonUtil.jsonToObjectList(mendaoTest.getTopicGroup(), TopicGroup.class);
+                                for(int i=0;i<topicReport.getShowNum();i++){
+                                    TopicReport topicReportBean = new TopicReport();
+
+                                    int score = map.get(topicGroupList.get(i).getTopicGroupId());
+                                    for(MendaoTopicReportList topicReportList:topicReport.getTopicReportList()){
+                                        if(topicReportList.getTopicGroupId().equals(topicGroupList.get(i).getTopicGroupId())){
+                                            topicReportBean.setTitle(topicReportList.getTitle());
+                                            for(MendaoSocreReport socreReport:topicReportList.getSocreReport()){
+                                                if(score>=socreReport.getTopSocre() && score<=socreReport.getDownSocre()){
+                                                    topicReportBean.setContent(socreReport.getSocreDesc());
+                                                    break;
+                                                }
+                                            }
+                                            topicReportBeanList.add(topicReportBean);
+                                            break;
+                                        }
+                                    }
+                                }
+                            }else{
+                                for(int i=0;i<topicReport.getShowNum();i++){
+
+                                    TopicReport topicReportBean = new TopicReport();
+                                    int score = map.get(tableTestMsgList.get(i).getTopicGroupId());
+                                    for(MendaoTopicReportList topicReportList:topicReport.getTopicReportList()){
+                                        if(topicReportList.getTopicGroupId().equals(tableTestMsgList.get(i).getTopicGroupId())){
+                                            topicReportBean.setTitle(topicReportList.getTitle());
+                                            for(MendaoSocreReport socreReport:topicReportList.getSocreReport()){
+                                                if(score>socreReport.getTopSocre() && score<socreReport.getDownSocre()){
+                                                    topicReportBean.setContent(socreReport.getSocreDesc());
+                                                    break;
+                                                }
+                                            }
+                                            topicReportBeanList.add(topicReportBean);
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+
+                            topicReportResp.setTopicReportList(topicReportBeanList);
+                        }
+                        commitResp.setTopicReport(topicReportResp);
+                    }
+                    //更多建议
+                    if(report.getIsShowMoreSuggest() == 1){
+                        commitResp.setMoreSuggestTitle(report.getMoreSuggestTitle());
+
+                        List<TopicReport> moreSuggestRespList = new ArrayList<>();
+
+                        List<MendaoMoreSuggest> moreSuggestList = JsonUtil.jsonToObjectList(report.getMoreSuggest(),MendaoMoreSuggest.class);
+
+                        for(MendaoMoreSuggest moreSuggest:moreSuggestList){
+                            int length = moreSuggest.getSuggestCode().length();
+                            StringBuffer codeString = new StringBuffer();
+                            for(int i=0;i<length;i++){
+                                codeString.append(tableTestMsgList.get(i).getTopicGroupCode());
+                            }
+                            if(moreSuggest.getSuggestCode().equals(codeString.toString())){
+                                TopicReport moreSuggestResp = new TopicReport();
+                                for(MendaoSuggestArray array:moreSuggest.getSuggestArray()){
+                                    moreSuggestResp.setTitle(array.getSuggestTitle());
+                                    moreSuggestResp.setContent(array.getSuggestContent());
+                                    moreSuggestRespList.add(moreSuggestResp);
+                                }
+                            }
+                        }
+
+                        commitResp.setMoreSuggest(moreSuggestRespList);
+                    }
+
+                    //测评总结
+                    if(report.getIsShowReportResult() == 1){
+                        commitResp.setReportResult(report.getReportResult());
+                    }
+
+                    //测试尾图
+                    if(report.getIsShowLastImage() == 1){
+                        commitResp.setLastImage(report.getLastImage());
+                    }
+
+                    resp.setData(commitResp);
+                }
+            }else{
+                resp.setCode(0);
+                resp.setMsg("参数为空");
+            }
             resp.setCode(1);
             resp.setMsg("请求成功");
         }catch (Exception e){
